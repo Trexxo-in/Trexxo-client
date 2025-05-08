@@ -8,7 +8,7 @@ class Preview_App extends StatefulWidget {
 }
 
 class _Preview_AppState extends State<Preview_App> {
-  PageController _controller = PageController(initialPage: 0);
+  final PageController _controller = PageController(initialPage: 0);
   int currentIndex = 0;
 
   @override
@@ -29,7 +29,7 @@ class _Preview_AppState extends State<Preview_App> {
                   onPageChanged: (index) {
                     setState(() => currentIndex = index);
                   },
-                  children: [
+                  children: const [
                     Book_ride(),
                     Track_Ride(),
                     Safe_Ride(),
@@ -45,16 +45,16 @@ class _Preview_AppState extends State<Preview_App> {
                       bool isActive = index == currentIndex;
                       // Brightness brightness=MediaQuery.of(context).platformBrightness;
                       return AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
                         width: isActive ? 30 : 20,
                         height: 12,
                         decoration: BoxDecoration(
                           color: isActive
                               ? MediaQuery.of(context).platformBrightness ==
                                       Brightness.light
-                                  ? Color.fromARGB(255, 95, 8, 224)
-                                  : Color(0xFFAE86EC) // purple
+                                  ? const Color.fromARGB(255, 95, 8, 224)
+                                  : const Color(0xFFAE86EC) // purple
                               : Colors.grey, // gray
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -62,7 +62,7 @@ class _Preview_AppState extends State<Preview_App> {
                     }),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 if (currentIndex != 2)
@@ -71,7 +71,7 @@ class _Preview_AppState extends State<Preview_App> {
                     child: ElevatedButton(
                       onPressed: () {
                         _controller.animateToPage(++currentIndex,
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       },
                       style: ElevatedButton.styleFrom(
@@ -102,7 +102,7 @@ class _Preview_AppState extends State<Preview_App> {
                           backgroundColor: const Color(0xFF5557F6),
                           foregroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 50)),
-                      child: Text(
+                      child: const Text(
                         "Get Started",
                         style: TextStyle(fontSize: 16),
                       ),
@@ -133,19 +133,19 @@ class Book_ride extends StatelessWidget {
             ),
             Center(
               child: CircleAvatar(
+                backgroundColor: const Color(0xFF5555FF),
+                radius: 100,
                 child: Container(
+                  padding: const EdgeInsets.all(33),
+                  height: 165,
+                  width: 165,
                   child: Image.asset(
                     "assets/images/car.png",
                   ),
-                  padding: EdgeInsets.all(33),
-                  height: 165,
-                  width: 165,
                 ),
-                backgroundColor: const Color(0xFF5555FF),
-                radius: 100,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             Center(
@@ -156,7 +156,7 @@ class Book_ride extends StatelessWidget {
                   .displayLarge
                   ?.copyWith(fontSize: 32, fontWeight: FontWeight.bold),
             )),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -190,19 +190,19 @@ class Track_Ride extends StatelessWidget {
             ),
             Center(
               child: CircleAvatar(
+                backgroundColor: const Color(0xFF5555FF),
+                radius: 100,
                 child: Container(
+                  padding: const EdgeInsets.all(33),
+                  height: 165,
+                  width: 165,
                   child: Image.asset(
                     "assets/images/track.png",
                   ),
-                  padding: EdgeInsets.all(33),
-                  height: 165,
-                  width: 165,
                 ),
-                backgroundColor: const Color(0xFF5555FF),
-                radius: 100,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             Center(
@@ -213,7 +213,7 @@ class Track_Ride extends StatelessWidget {
                   .displayLarge
                   ?.copyWith(fontSize: 32, fontWeight: FontWeight.bold),
             )),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -247,19 +247,19 @@ class Safe_Ride extends StatelessWidget {
             ),
             Center(
               child: CircleAvatar(
+                backgroundColor: const Color(0xFF5555FF),
+                radius: 100,
                 child: Container(
+                  padding: const EdgeInsets.all(33),
+                  height: 165,
+                  width: 165,
                   child: Image.asset(
                     "assets/images/safe.png",
                   ),
-                  padding: EdgeInsets.all(33),
-                  height: 165,
-                  width: 165,
                 ),
-                backgroundColor: const Color(0xFF5555FF),
-                radius: 100,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             Center(
@@ -270,7 +270,7 @@ class Safe_Ride extends StatelessWidget {
                   .displayLarge
                   ?.copyWith(fontSize: 32, fontWeight: FontWeight.bold),
             )),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(

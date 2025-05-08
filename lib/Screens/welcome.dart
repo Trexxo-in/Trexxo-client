@@ -88,7 +88,7 @@ class Welcome_Screen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Preview_App()));
+                        MaterialPageRoute(builder: (context) => const Preview_App()));
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5557F6),
