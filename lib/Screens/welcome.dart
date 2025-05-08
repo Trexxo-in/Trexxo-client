@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trexxo_cab_client/Screens/preview.dart';
 
 class Welcome_Screen extends StatelessWidget {
   const Welcome_Screen({super.key});
@@ -19,7 +20,7 @@ class Welcome_Screen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(
-                          height: 20,
+                          height: 80,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -27,7 +28,7 @@ class Welcome_Screen extends StatelessWidget {
                               child: Image.asset("assets/images/logo.png")),
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 40,
                         ),
                         Column(
                           children: [
@@ -35,7 +36,7 @@ class Welcome_Screen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const SizedBox(
-                                  width: 40,
+                                  width: 20,
                                 ),
                                 Text("Your Journey, ",
                                     style: Theme.of(context)
@@ -49,17 +50,20 @@ class Welcome_Screen extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  width: 20,
                                 )
                               ],
                             ),
                             const SizedBox(
-                              height: 23,
+                              height: 25,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const SizedBox(
-                                  width: 40,
+                                  width: 20,
                                 ),
                                 Expanded(
                                   child: Text(
@@ -67,6 +71,9 @@ class Welcome_Screen extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),
+                                ),
+                                const SizedBox(
+                                  width: 20,
                                 ),
                               ],
                             )
@@ -79,7 +86,10 @@ class Welcome_Screen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Preview_App()));
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5557F6),
                       foregroundColor: Colors.white,
