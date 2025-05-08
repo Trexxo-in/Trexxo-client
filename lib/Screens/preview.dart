@@ -10,7 +10,7 @@ class Preview_App extends StatefulWidget {
 class _Preview_AppState extends State<Preview_App> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
         child: SingleChildScrollView(
       child: Scaffold(
         

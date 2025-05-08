@@ -16,7 +16,7 @@ class _SplashScreenState extends State<Splash_Screen> {
     super.initState();
     Timer(delay, () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Welcome_Screen()));
+          context, MaterialPageRoute(builder: (context) => const Welcome_Screen()));
     });
   }
 

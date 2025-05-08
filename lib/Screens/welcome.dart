@@ -81,9 +81,9 @@ class Welcome_Screen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF5557F6),
+                      backgroundColor: const Color(0xFF5557F6),
                       foregroundColor: Colors.white,
-                      minimumSize: Size(double.infinity, 50)),
+                      minimumSize: const Size(double.infinity, 50)),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
