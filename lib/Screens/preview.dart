@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trexxo_cab_client/Screens/show_login.dart';
 
 class Preview_App extends StatefulWidget {
   const Preview_App({super.key});
@@ -97,7 +98,12 @@ class _Preview_AppState extends State<Preview_App> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ShowLogin()));
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF5557F6),
                           foregroundColor: Colors.white,

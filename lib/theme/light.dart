@@ -19,7 +19,7 @@ lighttheme() {
       ),
       labelMedium: TextStyle(
         fontSize: 16,
-        color: Colors.white,
+        color: Colors.black,
         fontWeight: FontWeight.w800,
       ),
       bodyMedium:TextStyle(
