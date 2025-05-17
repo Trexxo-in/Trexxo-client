@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trexxo_cab_client/Screens/Signup.dart';
 
 class ShowLogin extends StatefulWidget {
   const ShowLogin({super.key});
@@ -105,7 +106,7 @@ class _ShowLoginState extends State<ShowLogin> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * 42 / 100,
+                    width: MediaQuery.of(context).size.width * 41 / 100,
                     height: 2,
                     color: MediaQuery.of(context).platformBrightness ==
                                   Brightness.light
@@ -117,7 +118,7 @@ class _ShowLoginState extends State<ShowLogin> {
                     child: Text("OR"),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 42 / 100,
+                    width: MediaQuery.of(context).size.width * 41 / 100,
                     height: 2,
                     color: MediaQuery.of(context).platformBrightness ==
                                   Brightness.light
@@ -129,7 +130,7 @@ class _ShowLoginState extends State<ShowLogin> {
               const SizedBox(height: 40,),
                ElevatedButton(
                       onPressed: () {
-                       
+                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Signup()));
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF5557F6),
