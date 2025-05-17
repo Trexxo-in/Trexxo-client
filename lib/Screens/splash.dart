@@ -23,10 +23,10 @@ class _SplashScreenState extends State<Splash_Screen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Hero(
-        tag: "trexxo_welcome",
-        child: Scaffold(
-          body: Center(
+      child: Scaffold(
+        body: Center(
+          child: Hero(
+            tag: "trexxo_welcome",
             child: Image.asset("assets/images/logo.png"),
           ),
         ),
