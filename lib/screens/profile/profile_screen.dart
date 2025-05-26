@@ -15,7 +15,7 @@ class ProfileScreen extends StatelessWidget {
           child: const Text('Logout'),
           onPressed: () {
             context.read<AuthBloc>().add(LoggedOut());
-            // Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.popUntil(context, (route) => route.isFirst);
           },
         ),
       ),

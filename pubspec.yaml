@@ -23,6 +23,7 @@ dependencies:
   hydrated_bloc: ^10.0.0
   path_provider: ^2.1.5
   firebase_auth: ^5.5.4
+  icons_plus: ^5.0.0
 
 dev_dependencies:
   flutter_test:

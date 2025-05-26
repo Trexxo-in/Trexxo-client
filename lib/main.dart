@@ -9,6 +9,7 @@ import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
 import 'package:trexxo_mobility/services/auth_service.dart';
+import 'package:trexxo_mobility/utils/theme.dart';
 
 import 'firebase_options.dart';
 import 'constants.dart';
@@ -56,9 +57,9 @@ class MyApp extends StatelessWidget {
       builder: (context, themeMode) {
         return MaterialApp(
           title: StringConstants.appFullName,
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          themeMode: themeMode,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
           debugShowCheckedModeBanner: false,
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {

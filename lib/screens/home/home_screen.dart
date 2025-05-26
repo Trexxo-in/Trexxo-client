@@ -8,8 +8,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeCubit = context.watch<ThemeCubit>();
-    final isDark = themeCubit.state == ThemeMode.dark;
+    final themeMode = context.watch<ThemeCubit>().state;
+    final brightness = MediaQuery.of(context).platformBrightness;
+    final isDark =
+        themeMode == ThemeMode.system
+            ? brightness == Brightness.dark
+            : themeMode == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(
