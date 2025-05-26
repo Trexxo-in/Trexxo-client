@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "617282413591",
-    "project_id": "trexxo-user-app",
-    "storage_bucket": "trexxo-user-app.firebasestorage.app"
+    "project_number": "423565532476",
+    "project_id": "trexxo-4fb77",
+    "storage_bucket": "trexxo-4fb77.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:617282413591:android:8b2ff977737a7b52382852",
+        "mobilesdk_app_id": "1:423565532476:android:321ac0171fb2f6390b9239",
         "android_client_info": {
-          "package_name": "com.example.trexxo_cab_client"
+          "package_name": "com.example.trexxo_mobility"
         }
       },
       "oauth_client": [
         {
-          "client_id": "617282413591-b8hhnsld9o7ut5au7vjq0kacaffd0cl7.apps.googleusercontent.com",
+          "client_id": "423565532476-dt6plmae05cov9kcjb2d2t2fr8i5mh8s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDUbHCXhHX_BhKikDajvmNAgDmkopi1Y_Y"
+          "current_key": "AIzaSyDYMKIVfmt5y_9CkRJrv3ye1qqvdbirNWo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "617282413591-b8hhnsld9o7ut5au7vjq0kacaffd0cl7.apps.googleusercontent.com",
+              "client_id": "423565532476-dt6plmae05cov9kcjb2d2t2fr8i5mh8s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,29 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:trexxo_cab_client/Screens/splash.dart';
-import 'package:trexxo_cab_client/theme/dark.dart';
-import 'package:trexxo_cab_client/theme/light.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+import 'firebase_options.dart';
+import 'constants.dart';
+import 'cubits/theme_cubit.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final storage = await HydratedStorage.build(
+    storageDirectory: HydratedStorageDirectory(
+      (await getTemporaryDirectory()).path,
+    ),
+  );
+
+  HydratedBloc.storage = storage;
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Trexxo Rider App',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //   useMaterial3: true,
-      // ),
-      theme:lighttheme(),
-      darkTheme: dark_theme(),
-      debugShowCheckedModeBanner: false,
-      home: const Splash_Screen(),
+    return BlocProvider(
+      create: (_) => ThemeCubit(),
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            title: StringConstants.appFullName,
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeMode,
+            debugShowCheckedModeBanner: false,
+            initialRoute: homeRoute,
+            routes: routes,
+          );
+        },
+      ),
     );
   }
 }
-

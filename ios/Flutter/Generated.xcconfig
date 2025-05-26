@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\Flutter\sdk\flutter
-FLUTTER_APPLICATION_PATH=E:\Cab\Trexxo-cab-client
+FLUTTER_ROOT=C:\dev\flutter
+FLUTTER_APPLICATION_PATH=F:\Freelance\trexxoooo\trexxo_mobility
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build

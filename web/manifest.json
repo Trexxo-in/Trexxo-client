@@ -1,6 +1,6 @@
 {
-    "name": "trexxo_cab_client",
-    "short_name": "trexxo_cab_client",
+    "name": "trexxo_mobility",
+    "short_name": "trexxo_mobility",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
