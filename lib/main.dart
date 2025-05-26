@@ -3,12 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
+import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
+import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
+import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
+import 'package:trexxo_mobility/screens/home/home_screen.dart';
+import 'package:trexxo_mobility/services/auth_service.dart';
 
 import 'firebase_options.dart';
 import 'constants.dart';
 import 'cubits/theme_cubit.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -20,7 +26,25 @@ void main() async {
 
   HydratedBloc.storage = storage;
 
-  runApp(const MyApp());
+  final authService = AuthService();
+
+  runApp(
+    RepositoryProvider<AuthService>(
+      create: (_) => authService,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => ThemeCubit()),
+          BlocProvider(
+            create:
+                (context) =>
+                    AuthBloc(authService: context.read<AuthService>())
+                      ..add(AppStarted()),
+          ),
+        ],
+        child: const MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -28,21 +52,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ThemeCubit(),
-      child: BlocBuilder<ThemeCubit, ThemeMode>(
-        builder: (context, themeMode) {
-          return MaterialApp(
-            title: StringConstants.appFullName,
-            theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
-            themeMode: themeMode,
-            debugShowCheckedModeBanner: false,
-            initialRoute: homeRoute,
-            routes: routes,
-          );
-        },
-      ),
+    return BlocBuilder<ThemeCubit, ThemeMode>(
+      builder: (context, themeMode) {
+        return MaterialApp(
+          title: StringConstants.appFullName,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: themeMode,
+          debugShowCheckedModeBanner: false,
+          home: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state is Authenticated) {
+                return const HomeScreen();
+              } else if (state is Unauthenticated) {
+                return const AuthScreen();
+              }
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            },
+          ),
+          routes: routes,
+        );
+      },
     );
   }
 }
