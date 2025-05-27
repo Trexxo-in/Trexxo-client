@@ -16,6 +16,12 @@ ThemeData lightTheme = ThemeData(
     onSecondary: Colors.white,
   ),
   iconTheme: const IconThemeData(color: Colors.black87),
+  iconButtonTheme: const IconButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll(primaryColor),
+      iconColor: WidgetStatePropertyAll(Colors.white),
+    ),
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,
     foregroundColor: Colors.black,
@@ -56,6 +62,13 @@ ThemeData darkTheme = ThemeData(
     background: backgroundDark,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
+  ),
+  iconButtonTheme: const IconButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll(primaryColor),
+      iconColor: WidgetStatePropertyAll(Colors.black87),
+      iconSize: WidgetStatePropertyAll(24.0),
+    ),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,

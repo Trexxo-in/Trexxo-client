@@ -7,6 +7,7 @@ import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/utils/validators.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
+import 'package:trexxo_mobility/widgets/custom_icon_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
@@ -114,15 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.visiblePassword,
               prefixIcon: Icons.lock,
               obscureText: obscureText,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  obscureText
-                      ? Icons.visibility_off_outlined
-                      : Icons.remove_red_eye_outlined,
-                ),
-                onPressed: () {
-                  setState(() => obscureText = !obscureText);
-                },
+              suffixIcon: VisibilityIconButton(
+                obscureText: obscureText,
+                onPressed: () => setState(() => obscureText = !obscureText),
               ),
             ),
             const SizedBox(height: 16),

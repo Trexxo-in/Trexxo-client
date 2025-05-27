@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -7,13 +8,14 @@ import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
+import 'package:trexxo_mobility/widgets/custom_icon_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
 import 'package:trexxo_mobility/widgets/verification_laoder.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -45,9 +47,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await authService.sendEmailVerification();
         final verified = await _waitForEmailVerification(user);
 
+        final ref = FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid);
+
+        await ref.set({
+          'uid': user.uid,
+          'email': user.email,
+          'emailVerified': user.emailVerified,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
         if (verified && mounted) {
+          await ref.update({'emailVerified': user.emailVerified});
+
           context.read<AuthBloc>().add(LoggedIn());
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, profileSetupRoute);
           showSnackBar(context, 'Email verified successfully!');
         }
       }
@@ -119,15 +134,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.visiblePassword,
                   prefixIcon: Icons.lock,
                   obscureText: obscureText,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscureText
-                          ? Icons.visibility_off_outlined
-                          : Icons.remove_red_eye_outlined,
-                    ),
-                    onPressed: () {
-                      setState(() => obscureText = !obscureText);
-                    },
+                  suffixIcon: VisibilityIconButton(
+                    obscureText: obscureText,
+                    onPressed: () => setState(() => obscureText = !obscureText),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -145,9 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ClickableTextSpanRow(
                       text: 'Already have an account? ',
                       actionText: 'Login',
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, loginRoute);
-                      },
+                      onTap: () {},
                     ),
                   ],
                 ),
@@ -160,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   icon: Brand(Brands.google),
                   label: 'Continue with Google',
                   onPressed: () {
-                    // Google register logic
+                    Navigator.pushReplacementNamed(context, profileSetupRoute);
                   },
                 ),
                 const SizedBox(height: 12),
