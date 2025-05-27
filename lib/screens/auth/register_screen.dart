@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -9,6 +10,7 @@ import 'package:trexxo_mobility/widgets/custom_dividers.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
+import 'package:trexxo_mobility/widgets/verification_laoder.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -22,7 +24,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passController = TextEditingController();
   bool loading = false;
   bool obscureText = true;
-  String? error;
 
   @override
   void dispose() {
@@ -31,10 +32,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _register(AuthService authService) async {
-    setState(() {
-      loading = true;
-    });
+  Future<void> _register(AuthService authService) async {
+    setState(() => loading = true);
 
     try {
       final user = await authService.register(
@@ -43,121 +42,142 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (user != null) {
-        context.read<AuthBloc>().add(LoggedIn());
-        Navigator.pop(context);
-        showSnackBar(context, 'Registration successful!');
+        await authService.sendEmailVerification();
+        final verified = await _waitForEmailVerification(user);
+
+        if (verified && mounted) {
+          context.read<AuthBloc>().add(LoggedIn());
+          Navigator.pop(context);
+          showSnackBar(context, 'Email verified successfully!');
+        }
       }
     } catch (e) {
-      showSnackBar(context, e.toString(), error: true);
+      if (mounted) {
+        showSnackBar(context, e.toString(), error: true);
+      }
     } finally {
       if (mounted) {
-        setState(() {
-          loading = false;
-        });
+        setState(() => loading = false);
       }
     }
+  }
+
+  Future<bool> _waitForEmailVerification(User user) async {
+    bool isVerified = false;
+    while (!isVerified) {
+      await Future.delayed(const Duration(seconds: 3));
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      if (refreshedUser != null && refreshedUser.emailVerified) {
+        isVerified = true;
+      }
+    }
+    return isVerified;
   }
 
   @override
   Widget build(BuildContext context) {
     final authService = RepositoryProvider.of<AuthService>(context);
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Register Your Account',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Register Your Account',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Email Field
+                CustomTextField(
+                  label: 'Email',
+                  hintText: 'Enter your Email Address',
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: Icons.email,
+                ),
+                const SizedBox(height: 16),
+
+                // Password Field
+                CustomTextField(
+                  label: 'Password',
+                  hintText: 'Enter your Password',
+                  controller: _passController,
+                  keyboardType: TextInputType.visiblePassword,
+                  prefixIcon: Icons.lock,
+                  obscureText: obscureText,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscureText
+                          ? Icons.visibility_off_outlined
+                          : Icons.remove_red_eye_outlined,
+                    ),
+                    onPressed: () {
+                      setState(() => obscureText = !obscureText);
+                    },
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 24),
+                const SizedBox(height: 16),
 
-            // Email Field
-            CustomTextField(
-              label: 'Email',
-              hintText: 'Enter your Email Address',
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              prefixIcon: Icons.email,
-            ),
-            const SizedBox(height: 16),
-
-            // Password Field
-            CustomTextField(
-              label: 'Password',
-              hintText: 'Enter your Password',
-              controller: _passController,
-              keyboardType: TextInputType.visiblePassword,
-              prefixIcon: Icons.lock,
-              obscureText: obscureText,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  obscureText
-                      ? Icons.visibility_off_outlined
-                      : Icons.remove_red_eye_outlined,
+                // Register Button
+                AuthButton(
+                  onPressed: () => _register(authService),
+                  label: loading ? 'Registering...' : 'Register',
                 ),
-                onPressed: () {
-                  setState(() => obscureText = !obscureText);
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-            // Register Button
-            AuthButton(
-              onPressed: () => _register(authService),
-              label: loading ? 'Registering...' : 'Register',
-            ),
-            const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClickableTextSpanRow(
+                      text: 'Already have an account? ',
+                      actionText: 'Login',
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, loginRoute);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
 
-            // Forgot Password (optional for register, but kept if you want)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClickableTextSpanRow(
-                  text: 'Already have an account? ',
-                  actionText: 'Login',
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, loginRoute);
+                buildDividerWithText('OR'),
+                const SizedBox(height: 16),
+
+                SocialLoginButtons(
+                  icon: Brand(Brands.google),
+                  label: 'Continue with Google',
+                  onPressed: () {
+                    // Google register logic
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                SocialLoginButtons(
+                  icon: Brand(Brands.apple_brand),
+                  label: 'Continue with Apple',
+                  onPressed: () {
+                    // Apple register logic
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-
-            // Divider
-            buildDividerWithText('OR'),
-            const SizedBox(height: 16),
-
-            // Social Register Buttons
-            SocialLoginButtons(
-              icon: Brand(Brands.google),
-              label: 'Continue with Google',
-              onPressed: () {
-                // Google register logic
-              },
-            ),
-            const SizedBox(height: 12),
-            SocialLoginButtons(
-              icon: Brand(Brands.apple_brand),
-              label: 'Continue with Apple',
-              onPressed: () {
-                // Apple register logic
-              },
-            ),
-          ],
+          ),
         ),
-      ),
+        if (loading) const VerificationLoader(),
+      ],
     );
   }
 }

@@ -8,12 +8,14 @@ ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: primaryColor,
   scaffoldBackgroundColor: backgroundLight,
+
   colorScheme: ColorScheme.light(
     primary: primaryColor,
     secondary: primaryColor,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
   ),
+  iconTheme: const IconThemeData(color: Colors.black87),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,
     foregroundColor: Colors.black,
