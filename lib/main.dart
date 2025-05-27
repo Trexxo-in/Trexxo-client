@@ -12,7 +12,7 @@ import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/utils/theme.dart';
 
 import 'firebase_options.dart';
-import 'constants.dart';
+import 'utils/constants.dart';
 import 'cubits/theme_cubit.dart';
 
 Future<void> main() async {

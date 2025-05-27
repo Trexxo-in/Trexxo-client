@@ -4,6 +4,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/services/auth_service.dart';
+import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/utils/validators.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
@@ -86,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
+
             const SizedBox(height: 24),
 
             // Email Field
@@ -130,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () => _login(authService),
               label: loading ? 'Logging in...' : 'Login',
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // Forgot Password
             Row(
@@ -140,16 +142,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: 'Forgot Password? ',
                   actionText: 'Reset',
                   onTap: () {
-                    // Reset password logic
+                    Navigator.pushNamed(context, resetPassRoute);
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClickableTextSpanRow(
+                  text: "Don't have an account? ",
+                  actionText: 'Register',
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, registerRoute);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
 
             // Divider
             buildDividerWithText('OR'),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // Social Login Buttons
             SocialLoginButtons(
