@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trexxo_mobility/screens/auth/ResetPassword.dart';
+import 'package:trexxo_mobility/screens/auth/reset_password.dart';
 import 'package:trexxo_mobility/screens/auth/login_screen.dart';
 import 'package:trexxo_mobility/screens/auth/register_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
