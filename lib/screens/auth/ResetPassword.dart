@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
@@ -16,12 +17,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool _loading = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
   }
 
-  Future<void> _sendResetEmail() async {
+  Future<void> _sendResetEmail(AuthService authService) async {
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
@@ -32,16 +38,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     setState(() => _loading = true);
 
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await authService.sendPasswordResetEmail(email: email);
       showSnackBar(context, 'Password reset email sent! Check your inbox.');
-    } on FirebaseAuthException catch (e) {
-      showSnackBar(
-        context,
-        e.message ?? 'Failed to send reset email.',
-        error: true,
-      );
-    } catch (_) {
-      showSnackBar(context, 'An unexpected error occurred.', error: true);
+    } catch (e) {
+      showSnackBar(context, e.toString(), error: true);
     } finally {
       if (mounted) {
         setState(() => _loading = false);
@@ -51,6 +51,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = RepositoryProvider.of<AuthService>(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Reset Password')),
       body: Padding(
@@ -71,7 +72,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             ),
             const SizedBox(height: 16),
             AuthButton(
-              onPressed: _sendResetEmail,
+              onPressed: () => _sendResetEmail(authService),
               label: _loading ? 'Sending...' : 'Send Reset Email',
             ),
           ],
