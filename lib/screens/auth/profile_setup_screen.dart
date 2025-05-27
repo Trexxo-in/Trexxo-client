@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
-import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 
@@ -138,6 +135,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         hintText: 'Enter your email',
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        readOnly: true,
                       ),
                     ),
                     Padding(

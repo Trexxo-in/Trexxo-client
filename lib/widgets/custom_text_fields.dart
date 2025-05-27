@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final Widget? suffixIcon;
   final bool obscureText;
+  final bool readOnly;
 
   const CustomTextField({
     super.key,
@@ -22,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatters,
     this.prefixIcon,
     this.obscureText = false,
+    this.readOnly = false,
     this.suffixIcon,
   });
 
@@ -46,6 +48,7 @@ class CustomTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           obscureText: obscureText,
           autocorrect: true,
+          readOnly: readOnly,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: Theme.of(
