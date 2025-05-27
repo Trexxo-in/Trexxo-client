@@ -54,7 +54,7 @@ class AuthScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   SocialLoginButtons(
-                    icon: Brand(Brands.apple_brand),
+                    icon: Brand("assets\others\apple-icon.svg"),
                     label: 'Continue with Apple',
                     onPressed: () {
                       // Handle Apple login
