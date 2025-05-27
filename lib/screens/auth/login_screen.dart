@@ -7,6 +7,7 @@ import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/utils/validators.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
+import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
 
@@ -37,18 +38,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final emailError = emailValidator(email);
     if (emailError != null) {
-      setState(() => error = emailError);
+      showSnackBar(context, emailError, error: true);
       return;
     }
 
     if (password.isEmpty) {
-      setState(() => error = 'Password cannot be empty');
+      showSnackBar(context, 'Password cannot be empty', error: true);
       return;
     }
 
     setState(() {
       loading = true;
-      error = null;
+      error =
+          null; // You can remove this error state entirely if only using snackbars
     });
 
     try {
@@ -56,12 +58,16 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null && mounted) {
         context.read<AuthBloc>().add(LoggedIn());
         Navigator.pop(context);
+        showSnackBar(context, 'Logged in successfully!');
       }
     } catch (e) {
-      setState(() {
-        error = e.toString();
-        loading = false;
-      });
+      showSnackBar(context, e.toString(), error: true);
+    } finally {
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
 

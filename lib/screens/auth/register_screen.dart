@@ -6,6 +6,7 @@ import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
+import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
 
@@ -33,7 +34,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _register(AuthService authService) async {
     setState(() {
       loading = true;
-      error = null;
     });
 
     try {
@@ -45,12 +45,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (user != null) {
         context.read<AuthBloc>().add(LoggedIn());
         Navigator.pop(context);
+        showSnackBar(context, 'Registration successful!');
       }
     } catch (e) {
-      setState(() {
-        error = e.toString();
-        loading = false;
-      });
+      showSnackBar(context, e.toString(), error: true);
+    } finally {
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
 
@@ -108,12 +112,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
-            if (error != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Text(error!, style: const TextStyle(color: Colors.red)),
-              ),
 
             // Register Button
             AuthButton(
