@@ -11,46 +11,36 @@ ThemeData lightTheme = ThemeData(
   colorScheme: ColorScheme.light(
     primary: primaryColor,
     secondary: primaryColor,
-
     onPrimary: Colors.white,
     onSecondary: Colors.white,
   ),
-  appBarTheme: AppBarTheme(
-    backgroundColor: Colors.white,
-    elevation: 0,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.transparent,
     foregroundColor: Colors.black,
-    titleTextStyle: TextStyle(
-      color: Colors.black,
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-    ),
   ),
   textTheme: const TextTheme(
-    bodyMedium: TextStyle(color: Colors.black87, fontSize: 16),
-    headlineSmall: TextStyle(color: Colors.black87, fontSize: 24),
+    bodyMedium: TextStyle(color: Colors.black87),
+    headlineSmall: TextStyle(color: Colors.black87),
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(primaryColor),
-      foregroundColor: WidgetStateProperty.all(Colors.white),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      ),
+      backgroundColor: WidgetStatePropertyAll(primaryColor),
+      foregroundColor: WidgetStatePropertyAll(Colors.white),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
-    style: OutlinedButton.styleFrom(
-      side: const BorderSide(color: Colors.black),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    style: ButtonStyle(
+      foregroundColor: WidgetStatePropertyAll(Colors.black),
+      side: WidgetStatePropertyAll(BorderSide(color: Colors.black)),
     ),
   ),
-  inputDecorationTheme: InputDecorationTheme(
+  inputDecorationTheme: const InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
     prefixIconColor: Colors.grey,
     suffixIconColor: Colors.grey,
     labelStyle: TextStyle(color: Colors.black),
+    border: OutlineInputBorder(),
   ),
 );
 
@@ -65,41 +55,32 @@ ThemeData darkTheme = ThemeData(
     onPrimary: Colors.white,
     onSecondary: Colors.white,
   ),
-  appBarTheme: AppBarTheme(
-    backgroundColor: backgroundDark,
-    elevation: 0,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.transparent,
     foregroundColor: Colors.white,
-    titleTextStyle: TextStyle(
-      color: Colors.white,
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-    ),
   ),
   textTheme: const TextTheme(
-    bodyMedium: TextStyle(color: Colors.white70, fontSize: 16),
-    headlineSmall: TextStyle(color: Colors.white, fontSize: 24),
+    bodyMedium: TextStyle(color: Colors.white70),
+    headlineSmall: TextStyle(color: Colors.white),
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(primaryColor),
-      foregroundColor: WidgetStateProperty.all(Colors.white),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      ),
+      backgroundColor: WidgetStatePropertyAll(primaryColor),
+      foregroundColor: WidgetStatePropertyAll(Colors.white),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
-    style: OutlinedButton.styleFrom(
-      side: const BorderSide(color: Colors.white),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    style: ButtonStyle(
+      foregroundColor: WidgetStatePropertyAll(Colors.white),
+      side: WidgetStatePropertyAll(BorderSide(color: Colors.white)),
     ),
   ),
-  inputDecorationTheme: InputDecorationTheme(
+  inputDecorationTheme: const InputDecorationTheme(
     filled: true,
-    fillColor: const Color(0xFF1E1E1E),
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+    fillColor: Color(0xFF1E1E1E),
     prefixIconColor: Colors.white70,
     suffixIconColor: Colors.white70,
     labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(),
   ),
 );

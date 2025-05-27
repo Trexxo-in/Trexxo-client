@@ -25,7 +25,6 @@ class SocialLoginButtons extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            side: const BorderSide(),
             padding: const EdgeInsets.symmetric(horizontal: 16),
           ),
           onPressed: onPressed,
@@ -74,9 +73,6 @@ class AuthButton extends StatelessWidget {
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          // backgroundColor: WidgetStateProperty.all<Color>(
-          //   const Color(0xFF5555ff),
-          // ),
         ),
         onPressed: onPressed,
         child: Text(label, style: const TextStyle(fontSize: 16)),

@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
           title: StringConstants.appFullName,
           theme: lightTheme,
           darkTheme: darkTheme,
-          themeMode: ThemeMode.system,
+          themeMode: themeMode, // controlled by ThemeCubit
           debugShowCheckedModeBanner: false,
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
