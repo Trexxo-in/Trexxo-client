@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:trexxo_mobility/screens/auth/login_screen.dart';
-import 'package:trexxo_mobility/screens/auth/register_screen.dart';
+import 'package:trexxo_mobility/utils/constants.dart';
+import 'package:trexxo_mobility/utils/theme.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 
@@ -11,7 +11,6 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final brightness = MediaQuery.of(context).platformBrightness;
 
     return Scaffold(
       body: SafeArea(
@@ -20,7 +19,7 @@ class AuthScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/logo_name_column.png', width: 250),
+              Image.asset(appLogoColumn, width: 250),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +35,7 @@ class AuthScreen extends StatelessWidget {
                     'Your Rules',
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF5555ff),
+                      color: primaryColor,
                     ),
                   ),
                 ],
@@ -54,7 +53,7 @@ class AuthScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   SocialLoginButtons(
-                    icon: Brand("assets\others\apple-icon.svg"),
+                    icon: Icon(Icons.apple, size: 40),
                     label: 'Continue with Apple',
                     onPressed: () {
                       // Handle Apple login
@@ -64,12 +63,9 @@ class AuthScreen extends StatelessWidget {
                   buildDividerWithText('OR'),
                   const SizedBox(height: 16),
                   AuthButton(
-                    label: 'Login',
+                    label: 'Sign in with Email',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      );
+                      Navigator.pushNamed(context, loginRoute);
                     },
                   ),
                 ],
@@ -79,10 +75,7 @@ class AuthScreen extends StatelessWidget {
                 text: "Don't have an account? ",
                 actionText: "Register now!",
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                  );
+                  Navigator.pushNamed(context, registerRoute);
                 },
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
+import 'package:trexxo_mobility/utils/theme.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class WelcomeScreen extends StatelessWidget {
             Column(
               children: [
                 const SizedBox(height: 70),
-                Image.asset("assets/images/logo_name_column.png", width: 250),
+                Image.asset(appLogoColumn, width: 250),
               ],
             ),
 
@@ -40,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                         'Your Rules',
                         style: textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF5555FF),
+                          color: primaryColor,
                         ),
                       ),
                     ],

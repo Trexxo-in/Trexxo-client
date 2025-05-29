@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:trexxo_mobility/utils/theme.dart';
 
 class SocialLoginButtons extends StatelessWidget {
   final VoidCallback onPressed;
@@ -129,7 +130,7 @@ class ClickableTextSpanRow extends StatelessWidget {
                 actionStyle ??
                 theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF5555FF),
+                  color: primaryColor,
                 ),
             recognizer: TapGestureRecognizer()..onTap = onTap,
           ),

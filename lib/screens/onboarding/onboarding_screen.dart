@@ -125,7 +125,7 @@ class OnboardingPage extends StatelessWidget {
           const SizedBox(height: 70),
           Center(
             child: CircleAvatar(
-              backgroundColor: const Color(0xFF5555FF),
+              backgroundColor: primaryColor,
               radius: 100,
               child: Padding(
                 padding: const EdgeInsets.all(33),

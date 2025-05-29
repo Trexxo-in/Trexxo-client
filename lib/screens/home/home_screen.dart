@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trexxo_mobility/cubits/theme_cubit.dart';
-import 'package:trexxo_mobility/screens/profile/profile_screen.dart';
+import 'package:trexxo_mobility/utils/constants.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -31,11 +31,7 @@ class HomeScreen extends StatelessWidget {
               const Icon(Icons.dark_mode),
               IconButton(
                 icon: const Icon(Icons.person),
-                onPressed:
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                    ),
+                onPressed: () => Navigator.pushNamed(context, profileRoute),
               ),
             ],
           ),

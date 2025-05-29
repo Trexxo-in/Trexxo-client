@@ -50,8 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       loading = true;
-      error =
-          null; // You can remove this error state entirely if only using snackbars
+      error = null;
     });
 
     try {
@@ -177,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             SocialLoginButtons(
-              icon: Brand("assets\others\apple-icon.svg"),
+              icon: Icon(Icons.apple, size: 40),
               label: 'Continue with Apple',
               onPressed: () {
                 // Apple login logic
