@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/auth/profile_setup_screen.dart';
 import 'package:trexxo_mobility/screens/auth/reset_password.dart';
@@ -43,3 +44,5 @@ class StringConstants {
 const String appLogo = "assets/app/logo.png";
 const String appLogoColumn = "assets/app/logo_name_column.png";
 const String appLogoRow = "assets/app/logo_name_horizontal.png";
+
+const LatLng defaultLocation = LatLng(22.4800054, 88.3447443); // Kolkata, India

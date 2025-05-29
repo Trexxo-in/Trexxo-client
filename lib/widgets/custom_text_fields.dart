@@ -81,8 +81,8 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-/// Reusable input field widget.
 class LocationInputField extends StatelessWidget {
+  final TextEditingController? controller;
   final String label;
   final IconData icon;
 
@@ -90,11 +90,13 @@ class LocationInputField extends StatelessWidget {
     super.key,
     required this.label,
     required this.icon,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),

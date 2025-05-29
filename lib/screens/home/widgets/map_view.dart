@@ -1,18 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:trexxo_mobility/widgets/map_sample.dart';
 
 class MapView extends StatelessWidget {
-  final LatLng? currentPosition;
-  const MapView({super.key, this.currentPosition});
+  final LatLng location;
+  final Completer<GoogleMapController> mapController;
+
+  const MapView({
+    super.key,
+    required this.location,
+    required this.mapController,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MapWidget(
-      initialCameraPosition: CameraPosition(
-        target: currentPosition ?? const LatLng(37.7749, -122.4194),
-        zoom: 14,
-      ),
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(target: location, zoom: 12),
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      onMapCreated: (controller) => mapController.complete(controller),
     );
   }
 }

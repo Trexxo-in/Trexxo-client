@@ -1,69 +1,41 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trexxo_mobility/blocs/booking/booking_bloc.dart';
+import 'package:trexxo_mobility/blocs/booking/booking_event.dart';
+
 import 'package:flutter/material.dart';
+import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
 
-class PositionedRideRequestCard extends StatelessWidget {
-  final bool isLoading;
-  final VoidCallback onGetLocationPressed;
+class RideRequestCard extends StatelessWidget {
+  final TextEditingController pickupController;
+  final TextEditingController dropoffController;
 
-  const PositionedRideRequestCard({
+  const RideRequestCard({
     super.key,
-    required this.isLoading,
-    required this.onGetLocationPressed,
+    required this.pickupController,
+    required this.dropoffController,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LocationButton(
-              isLoading: isLoading,
-              onPressed: onGetLocationPressed,
-            ),
-            const SizedBox(height: 8),
-            _RideRequestCardContent(),
-          ],
-        ),
-      ),
-    );
+  void _submitRideRequest(BuildContext context) {
+    final pickup = pickupController.text.trim();
+    final dropoff = dropoffController.text.trim();
+
+    if (pickup.isEmpty || dropoff.isEmpty) {
+      showSnackBar(context, "Please enter both pickup and drop-off locations");
+      return;
+    }
+
+    final bookingBloc = context.read<BookingBloc>();
+
+    // Start booking and set fields in one event dispatch
+    bookingBloc.add(BookingStarted());
+    bookingBloc.add(PickupLocationSelected(pickup));
+    bookingBloc.add(DropoffLocationSelected(dropoff));
+    bookingBloc.add(ServiceTypeSelected(ServiceType.ride));
+    bookingBloc.add(BookingSubmitted());
+
+    showSnackBar(context, "Booking request submitted!");
   }
-}
-
-class _LocationButton extends StatelessWidget {
-  final bool isLoading;
-  final VoidCallback onPressed;
-
-  const _LocationButton({required this.isLoading, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        IconButton(
-          onPressed: isLoading ? null : onPressed,
-          icon:
-              isLoading
-                  ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                  : const Icon(Icons.my_location_rounded, size: 28),
-          tooltip: 'Get Current Location',
-          color: Theme.of(context).primaryColor,
-        ),
-      ],
-    );
-  }
-}
-
-class _RideRequestCardContent extends StatelessWidget {
-  const _RideRequestCardContent();
 
   @override
   Widget build(BuildContext context) {
@@ -76,28 +48,62 @@ class _RideRequestCardContent extends StatelessWidget {
       offset: const Offset(0, 5),
     );
 
-    return Container(
-      padding: const EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: [boxShadow],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Get a Ride Now',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Container(
+          padding: const EdgeInsets.all(padding),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(borderRadius),
+            boxShadow: [boxShadow],
           ),
-          const SizedBox(height: 12),
-          LocationInputField(label: 'Pickup Location', icon: Icons.my_location),
-          const SizedBox(height: 12),
-          LocationInputField(
-            label: 'Drop-off Location',
-            icon: Icons.location_on,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Location loader and refresh button row
+
+              // Title
+              const Text(
+                'Get a Ride Now',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+
+              // Pickup input
+              LocationInputField(
+                controller: pickupController,
+                label: 'Pickup Location',
+                icon: Icons.my_location,
+              ),
+              const SizedBox(height: 12),
+
+              // Dropoff input
+              LocationInputField(
+                controller: dropoffController,
+                label: 'Drop-off Location',
+                icon: Icons.location_on,
+              ),
+              const SizedBox(height: 16),
+
+              // Confirm button
+              ElevatedButton.icon(
+                onPressed: () => _submitRideRequest(context),
+                icon: const Icon(Icons.check),
+                label: const Text('Confirm Ride'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

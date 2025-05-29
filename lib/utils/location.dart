@@ -1,6 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
 
 Future<LatLng?> getLocation() async {
   // Request location permission
@@ -22,7 +23,14 @@ Future<LatLng?> getLocation() async {
     // Return as LatLng
     return LatLng(position.latitude, position.longitude);
   } catch (e) {
-    // Handle or log error here if needed
     return null;
   }
+}
+
+Future<void> animateCamera(
+  CameraPosition position,
+  Completer<GoogleMapController> mapController,
+) async {
+  final controller = await mapController.future;
+  await controller.animateCamera(CameraUpdate.newCameraPosition(position));
 }

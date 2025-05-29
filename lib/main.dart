@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
+import 'package:trexxo_mobility/blocs/booking/booking_bloc.dart';
 import 'package:trexxo_mobility/cubits/onboarding_cubit.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
@@ -45,6 +46,7 @@ Future<void> main() async {
                     AuthBloc(firebaseService: context.read<FirebaseService>())
                       ..add(AppStarted()),
           ),
+          BlocProvider<BookingBloc>(create: (context) => BookingBloc()),
         ],
         child: const MyApp(),
       ),
