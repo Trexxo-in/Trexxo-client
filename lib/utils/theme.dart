@@ -49,17 +49,14 @@ ThemeData lightTheme = ThemeData(
   ),
 
   // Text styling
-  textTheme: const TextTheme(
-    bodyMedium: TextStyle(color: Colors.black87),
-    headlineSmall: TextStyle(color: Colors.black87),
-  ),
+  // textTheme: const TextTheme(
+  //   bodyMedium: TextStyle(color: Colors.black87),
+  //   headlineSmall: TextStyle(color: Colors.black87),
+  // ),
 
   // Filled buttons
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      textStyle: WidgetStatePropertyAll(
-        TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      ),
       backgroundColor: WidgetStatePropertyAll(primaryColor),
       foregroundColor: WidgetStatePropertyAll(Colors.white),
     ),
@@ -125,10 +122,10 @@ ThemeData darkTheme = ThemeData(
   ),
 
   // Text styling
-  textTheme: const TextTheme(
-    bodyMedium: TextStyle(color: Colors.white70),
-    headlineSmall: TextStyle(color: Colors.white),
-  ),
+  // textTheme: const TextTheme(
+  //   bodyMedium: TextStyle(color: Colors.white70),
+  //   headlineSmall: TextStyle(color: Colors.white),
+  // ),
 
   // Filled buttons
   filledButtonTheme: FilledButtonThemeData(
