@@ -61,7 +61,14 @@ class SocialLoginButtons extends StatelessWidget {
 class AuthButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  const AuthButton({super.key, required this.onPressed, required this.label});
+  final Widget? icon;
+
+  const AuthButton({
+    super.key,
+    required this.onPressed,
+    required this.label,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +76,20 @@ class AuthButton extends StatelessWidget {
       width: 340,
       height: 60,
       child: FilledButton(
-        style: ButtonStyle(
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        style: FilledButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
         ),
         onPressed: onPressed,
-        child: Text(label, style: const TextStyle(fontSize: 16)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(label, style: const TextStyle(fontSize: 16)),
+            if (icon != null) ...[const SizedBox(width: 8), icon!],
+          ],
+        ),
       ),
     );
   }

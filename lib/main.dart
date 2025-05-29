@@ -6,8 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
+import 'package:trexxo_mobility/cubits/onboarding_cubit.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
+import 'package:trexxo_mobility/screens/onboarding/welcome_screen.dart';
 import 'package:trexxo_mobility/services/auth_service.dart';
 import 'package:trexxo_mobility/utils/theme.dart';
 
@@ -35,6 +37,7 @@ Future<void> main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => ThemeCubit()),
+          BlocProvider(create: (_) => OnboardingCubit()),
           BlocProvider(
             create:
                 (context) =>
@@ -50,7 +53,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
@@ -59,21 +61,29 @@ class MyApp extends StatelessWidget {
           title: StringConstants.appFullName,
           theme: lightTheme,
           darkTheme: darkTheme,
-          themeMode: themeMode, // controlled by ThemeCubit
+          themeMode: themeMode,
           debugShowCheckedModeBanner: false,
-          home: BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              if (state is Authenticated) {
-                return const HomeScreen();
-              } else if (state is Unauthenticated) {
-                return const AuthScreen();
+          routes: routes,
+          home: BlocBuilder<OnboardingCubit, bool>(
+            builder: (context, isFirstTime) {
+              if (isFirstTime) {
+                return WelcomeScreen();
+              } else {
+                return BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is Authenticated) {
+                      return const HomeScreen();
+                    } else if (state is Unauthenticated) {
+                      return const AuthScreen();
+                    }
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                );
               }
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
             },
           ),
-          routes: routes,
         );
       },
     );
