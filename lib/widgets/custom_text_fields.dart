@@ -80,3 +80,26 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
+/// Reusable input field widget.
+class LocationInputField extends StatelessWidget {
+  final String label;
+  final IconData icon;
+
+  const LocationInputField({
+    super.key,
+    required this.label,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+}

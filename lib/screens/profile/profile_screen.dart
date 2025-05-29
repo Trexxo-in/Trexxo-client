@@ -19,53 +19,52 @@ class ProfileScreen extends StatelessWidget {
 
     final user = context.read<AuthBloc>().currentUser;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          Row(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile'),
+          actions: [
+            Row(
+              children: [
+                const Icon(Icons.light_mode),
+                Switch(
+                  value: isDark,
+                  onChanged: (value) {
+                    context.read<ThemeCubit>().toggleTheme(value);
+                  },
+                ),
+                const Icon(Icons.dark_mode),
+              ],
+            ),
+          ],
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.light_mode),
-              Switch(
-                value: isDark,
-                onChanged: (value) {
-                  context.read<ThemeCubit>().toggleTheme(value);
-                },
+              Text(
+                'Name: ${user?.name}',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              const Icon(Icons.dark_mode),
+              Text(
+                'Mobile: ${user?.mobile}',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Text(
+                'Email: ${user?.email}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 32),
+              AuthButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(LoggedOut());
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+                label: 'Logout',
+              ),
             ],
           ),
-        ],
-      ),
-      body: Center(
-        child:
-            user == null
-                ? const CircularProgressIndicator()
-                : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Name: ${user.name}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(
-                      'Mobile: ${user.mobile}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(
-                      'Email: ${user.email}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 32),
-                    AuthButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(LoggedOut());
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      },
-                      label: 'Logout',
-                    ),
-                  ],
-                ),
+        ),
       ),
     );
   }
