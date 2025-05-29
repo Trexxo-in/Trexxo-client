@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const primaryColor = Color(0xFF5555FF);
 const backgroundLight = Color(0xFFF5F5F5);
 const backgroundDark = Color(0xFF121212);
+String? fontFam = GoogleFonts.rubik().fontFamily;
 
 ThemeData lightTheme = ThemeData(
+  fontFamily: fontFam,
   brightness: Brightness.light,
   primaryColor: primaryColor,
   scaffoldBackgroundColor: backgroundLight,
@@ -32,8 +35,13 @@ ThemeData lightTheme = ThemeData(
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
+      textStyle: WidgetStatePropertyAll(
+        TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
       backgroundColor: WidgetStatePropertyAll(primaryColor),
-      foregroundColor: WidgetStatePropertyAll(Colors.white),
+      foregroundColor: WidgetStatePropertyAll(
+        const Color.fromRGBO(255, 255, 255, 1),
+      ),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -53,6 +61,7 @@ ThemeData lightTheme = ThemeData(
 );
 
 ThemeData darkTheme = ThemeData(
+  fontFamily: fontFam,
   brightness: Brightness.dark,
   primaryColor: primaryColor,
   scaffoldBackgroundColor: backgroundDark,

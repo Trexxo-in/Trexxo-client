@@ -43,13 +43,8 @@ class SocialLoginButtons extends StatelessWidget {
                 style: const TextStyle(fontSize: 16),
               ),
               const Opacity(
-                // Invisible spacer to balance layout
                 opacity: 0,
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Icon(Icons.abc), // same size as icon to keep symmetry
-                ),
+                child: SizedBox(width: 24, height: 24, child: Icon(Icons.abc)),
               ),
             ],
           ),
@@ -87,7 +82,8 @@ class AuthButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(label, style: const TextStyle(fontSize: 16)),
+            Text(label),
+
             if (icon != null) ...[const SizedBox(width: 8), icon!],
           ],
         ),
