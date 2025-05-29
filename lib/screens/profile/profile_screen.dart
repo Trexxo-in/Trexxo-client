@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
-import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
 import 'package:trexxo_mobility/cubits/theme_cubit.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
-import 'package:trexxo_mobility/models/user_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -19,12 +17,7 @@ class ProfileScreen extends StatelessWidget {
             ? brightness == Brightness.dark
             : themeMode == ThemeMode.dark;
 
-    final authState = context.watch<AuthBloc>().state;
-
-    UserModel? user;
-    if (authState is Authenticated) {
-      user = authState.user;
-    }
+    final user = context.read<AuthBloc>().currentUser;
 
     return Scaffold(
       appBar: AppBar(
