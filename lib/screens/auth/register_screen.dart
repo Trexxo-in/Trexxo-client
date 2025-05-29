@@ -12,7 +12,7 @@ import 'package:trexxo_mobility/widgets/custom_icon_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
-import 'package:trexxo_mobility/widgets/verification_laoder.dart';
+import 'package:trexxo_mobility/widgets/custom_laoder.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -183,7 +183,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         ),
-        if (loading) const VerificationLoader(),
+        if (loading)
+          const CustomLoader(
+            waitingText: "Waiting for user to \nverify email id",
+          ),
       ],
     );
   }

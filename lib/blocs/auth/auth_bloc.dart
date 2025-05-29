@@ -9,14 +9,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.firebaseService}) : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
       if (firebaseService.isLoggedIn) {
-        emit(Authenticated(firebaseService.currentUser!.uid));
+        final user = await firebaseService.fetchUserModel();
+        if (user != null) {
+          emit(Authenticated(user));
+        } else {
+          emit(Unauthenticated());
+        }
       } else {
         emit(Unauthenticated());
       }
     });
 
-    on<LoggedIn>((event, emit) {
-      emit(Authenticated(firebaseService.currentUser!.uid));
+    on<LoggedIn>((event, emit) async {
+      final user = await firebaseService.fetchUserModel();
+      if (user != null) {
+        emit(Authenticated(user));
+      } else {
+        emit(Unauthenticated());
+      }
     });
 
     on<LoggedOut>((event, emit) async {

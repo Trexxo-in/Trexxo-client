@@ -12,6 +12,7 @@ import 'package:trexxo_mobility/screens/home/home_screen.dart';
 import 'package:trexxo_mobility/screens/onboarding/welcome_screen.dart';
 import 'package:trexxo_mobility/services/firebase_service.dart';
 import 'package:trexxo_mobility/utils/theme.dart';
+import 'package:trexxo_mobility/widgets/custom_laoder.dart';
 
 import 'firebase_options.dart';
 import 'utils/constants.dart';
@@ -76,9 +77,7 @@ class MyApp extends StatelessWidget {
                     } else if (state is Unauthenticated) {
                       return const AuthScreen();
                     }
-                    return const Scaffold(
-                      body: Center(child: CircularProgressIndicator()),
-                    );
+                    return const CustomLoader();
                   },
                 );
               }

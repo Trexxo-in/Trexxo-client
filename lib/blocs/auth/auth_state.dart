@@ -1,11 +1,13 @@
+import 'package:trexxo_mobility/models/user_model.dart';
+
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
 class Authenticated extends AuthState {
-  final String userId;
+  final UserModel user;
 
-  Authenticated(this.userId);
+  Authenticated(this.user);
 }
 
 class Unauthenticated extends AuthState {}

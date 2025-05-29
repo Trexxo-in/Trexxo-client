@@ -3,14 +3,15 @@ import 'dart:math';
 
 import 'package:trexxo_mobility/utils/theme.dart';
 
-class VerificationLoader extends StatefulWidget {
-  const VerificationLoader({Key? key}) : super(key: key);
+class CustomLoader extends StatefulWidget {
+  final String? waitingText;
+  const CustomLoader({super.key, this.waitingText = ''});
 
   @override
-  State<VerificationLoader> createState() => _VerificationLoaderState();
+  State<CustomLoader> createState() => _CustomLoaderState();
 }
 
-class _VerificationLoaderState extends State<VerificationLoader>
+class _CustomLoaderState extends State<CustomLoader>
     with TickerProviderStateMixin {
   late AnimationController _rotationController;
   late AnimationController _pulseController;
@@ -45,7 +46,6 @@ class _VerificationLoaderState extends State<VerificationLoader>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.deepOrangeAccent,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,10 +96,10 @@ class _VerificationLoaderState extends State<VerificationLoader>
             ),
             const SizedBox(height: 30),
             // Text
-            const Text(
-              "Waiting for user to \nverify email id",
+            Text(
+              widget.waitingText ?? '',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 1.2,

@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
+import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
 import 'package:trexxo_mobility/cubits/theme_cubit.dart';
-
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
+import 'package:trexxo_mobility/models/user_model.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final themeMode = context.watch<ThemeCubit>().state;
@@ -22,6 +18,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         themeMode == ThemeMode.system
             ? brightness == Brightness.dark
             : themeMode == ThemeMode.dark;
+
+    final authState = context.watch<AuthBloc>().state;
+
+    UserModel? user;
+    if (authState is Authenticated) {
+      user = authState.user;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -41,18 +44,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          AuthButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(LoggedOut());
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            label: 'Logout',
-          ),
-        ],
+      body: Center(
+        child:
+            user == null
+                ? const CircularProgressIndicator()
+                : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Name: ${user.name}',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    Text(
+                      'Mobile: ${user.mobile}',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    Text(
+                      'Email: ${user.email}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 32),
+                    AuthButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(LoggedOut());
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                      },
+                      label: 'Logout',
+                    ),
+                  ],
+                ),
       ),
     );
   }
