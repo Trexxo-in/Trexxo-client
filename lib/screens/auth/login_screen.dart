@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
-import 'package:trexxo_mobility/services/auth_service.dart';
+import 'package:trexxo_mobility/services/firebase_service.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/utils/validators.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login(AuthService authService) async {
+  void _login(FirebaseService firebaseService) async {
     final email = _emailController.text.trim();
     final password = _passController.text;
 
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final user = await authService.signIn(email: email, password: password);
+      final user = await firebaseService.signIn(email, password);
       if (user != null && mounted) {
         context.read<AuthBloc>().add(LoggedIn());
         Navigator.pop(context);
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = RepositoryProvider.of<AuthService>(context);
+    final firebaseService = RepositoryProvider.of<FirebaseService>(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             // Login Button
             AuthButton(
-              onPressed: () => _login(authService),
+              onPressed: () => _login(firebaseService),
               label: loading ? 'Logging in...' : 'Login',
             ),
             const SizedBox(height: 16),

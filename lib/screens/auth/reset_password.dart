@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trexxo_mobility/services/auth_service.dart';
+import 'package:trexxo_mobility/services/firebase_service.dart';
 import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
@@ -27,7 +27,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _sendResetEmail(AuthService authService) async {
+  Future<void> _sendResetEmail(FirebaseService firebaseService) async {
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
@@ -38,7 +38,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     setState(() => _loading = true);
 
     try {
-      await authService.sendPasswordResetEmail(email: email);
+      await firebaseService.sendPasswordResetEmail(email);
       showSnackBar(context, 'Password reset email sent! Check your inbox.');
     } catch (e) {
       showSnackBar(context, e.toString(), error: true);
@@ -51,7 +51,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = RepositoryProvider.of<AuthService>(context);
+    final firebaseService = RepositoryProvider.of<FirebaseService>(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Reset Password')),
       body: Padding(
@@ -72,7 +72,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             ),
             const SizedBox(height: 16),
             AuthButton(
-              onPressed: () => _sendResetEmail(authService),
+              onPressed: () => _sendResetEmail(firebaseService),
               label: _loading ? 'Sending...' : 'Send Reset Email',
             ),
           ],

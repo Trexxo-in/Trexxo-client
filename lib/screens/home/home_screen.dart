@@ -8,17 +8,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Screen'),
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.person),
-                onPressed: () => Navigator.pushNamed(context, profileRoute),
-              ),
-            ],
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.person),
+          onPressed: () => Navigator.pushNamed(context, profileRoute),
+        ),
       ),
       body: const Center(child: Text('Welcome to Home')),
     );

@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
-import 'package:trexxo_mobility/services/auth_service.dart';
+import 'package:trexxo_mobility/services/firebase_service.dart';
 import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/widgets/custom_dividers.dart';
 import 'package:trexxo_mobility/widgets/custom_icon_buttons.dart';
@@ -34,13 +34,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  Future<void> _register(AuthService authService) async {
+  Future<void> _register(FirebaseService authService) async {
     setState(() => loading = true);
 
     try {
       final user = await authService.register(
-        email: _emailController.text.trim(),
-        password: _passController.text,
+        _emailController.text.trim(),
+        _passController.text,
       );
 
       if (user != null) {
@@ -93,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = RepositoryProvider.of<AuthService>(context);
+    final authService = RepositoryProvider.of<FirebaseService>(context);
 
     return Stack(
       children: [

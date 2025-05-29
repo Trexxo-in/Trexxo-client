@@ -10,7 +10,7 @@ import 'package:trexxo_mobility/cubits/onboarding_cubit.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
 import 'package:trexxo_mobility/screens/onboarding/welcome_screen.dart';
-import 'package:trexxo_mobility/services/auth_service.dart';
+import 'package:trexxo_mobility/services/firebase_service.dart';
 import 'package:trexxo_mobility/utils/theme.dart';
 
 import 'firebase_options.dart';
@@ -29,11 +29,11 @@ Future<void> main() async {
 
   HydratedBloc.storage = storage;
 
-  final authService = AuthService();
+  final firebaseService = FirebaseService();
 
   runApp(
-    RepositoryProvider<AuthService>(
-      create: (_) => authService,
+    RepositoryProvider<FirebaseService>(
+      create: (_) => firebaseService,
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => ThemeCubit()),
@@ -41,7 +41,7 @@ Future<void> main() async {
           BlocProvider(
             create:
                 (context) =>
-                    AuthBloc(authService: context.read<AuthService>())
+                    AuthBloc(firebaseService: context.read<FirebaseService>())
                       ..add(AppStarted()),
           ),
         ],
