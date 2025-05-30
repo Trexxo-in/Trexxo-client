@@ -20,27 +20,28 @@ class _HomeScreenState extends State<HomeScreen> {
   LatLng location = defaultLocation;
   final Completer<GoogleMapController> mapController = Completer();
 
-  late final TextEditingController _pickupController;
-  late final TextEditingController _dropoffController;
+  final TextEditingController _pickupController = TextEditingController();
+  final TextEditingController _dropoffController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _pickupController = TextEditingController();
-    _dropoffController = TextEditingController();
     _initializeLocation();
   }
 
   Future<void> _initializeLocation() async {
     final currentLocation = await getLocation();
-    if (currentLocation == null || !mounted) return;
-
-    setState(() => location = currentLocation);
-
-    await animateCamera(
-      CameraPosition(target: currentLocation, zoom: 15),
-      mapController,
-    );
+    if (mounted) {
+      setState(() {
+        location = currentLocation!;
+      });
+      if (currentLocation != null) {
+        animateCamera(
+          CameraPosition(target: currentLocation, zoom: 15),
+          mapController,
+        );
+      }
+    }
   }
 
   @override
@@ -51,12 +52,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           body: Stack(
             children: [
+              // gmap view
               MapView(location: location, mapController: mapController),
+              // cards
               const PositionedProfileButton(),
               RideRequestCard(
                 pickupController: _pickupController,
                 dropoffController: _dropoffController,
               ),
+              // my lcoation
               MyLocationButton(mapController: mapController),
             ],
           ),

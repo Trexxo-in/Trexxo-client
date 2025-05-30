@@ -51,4 +51,18 @@ class FirebaseService {
       await user.sendEmailVerification();
     }
   }
+
+  Future<bool> waitForEmailVerification(User user) async {
+    bool isVerified = false;
+    while (!isVerified) {
+      await Future.delayed(const Duration(seconds: 3));
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      if (refreshedUser != null && refreshedUser.emailVerified) {
+        isVerified = true;
+      }
+    }
+    return isVerified;
+  }
 }

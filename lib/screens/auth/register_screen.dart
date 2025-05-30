@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,18 +33,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  Future<void> _register(FirebaseService authService) async {
+  Future<void> _register(FirebaseService firebaseService) async {
     setState(() => loading = true);
 
     try {
-      final user = await authService.register(
+      final user = await firebaseService.register(
         _emailController.text.trim(),
         _passController.text,
       );
 
       if (user != null) {
-        await authService.sendEmailVerification();
-        final verified = await _waitForEmailVerification(user);
+        await firebaseService.sendEmailVerification();
+        final verified = await firebaseService.waitForEmailVerification(user);
 
         final ref = FirebaseFirestore.instance
             .collection('users')
@@ -77,27 +76,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<bool> _waitForEmailVerification(User user) async {
-    bool isVerified = false;
-    while (!isVerified) {
-      await Future.delayed(const Duration(seconds: 3));
-      await user.reload();
-      final refreshedUser = FirebaseAuth.instance.currentUser;
-
-      if (refreshedUser != null && refreshedUser.emailVerified) {
-        isVerified = true;
-      }
-    }
-    return isVerified;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final authService = RepositoryProvider.of<FirebaseService>(context);
+    final firebaseService = RepositoryProvider.of<FirebaseService>(context);
 
-    return Stack(
-      children: [
-        Scaffold(
+    return loading
+        ? const CustomLoader(
+          waitingText: "Waiting for user to \nverify email id",
+        )
+        : Scaffold(
           appBar: AppBar(),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -143,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 // Register Button
                 AuthButton(
-                  onPressed: () => _register(authService),
+                  onPressed: () => _register(firebaseService),
                   label: loading ? 'Registering...' : 'Register',
                 ),
                 const SizedBox(height: 16),
@@ -182,12 +169,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
           ),
-        ),
-        if (loading)
-          const CustomLoader(
-            waitingText: "Waiting for user to \nverify email id",
-          ),
-      ],
-    );
+        );
   }
 }

@@ -57,6 +57,13 @@ ThemeData lightTheme = ThemeData(
   // Filled buttons
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
+      textStyle: WidgetStatePropertyAll(
+        const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       backgroundColor: WidgetStatePropertyAll(primaryColor),
       foregroundColor: WidgetStatePropertyAll(Colors.white),
     ),
@@ -130,6 +137,13 @@ ThemeData darkTheme = ThemeData(
   // Filled buttons
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
+      textStyle: WidgetStatePropertyAll(
+        const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       backgroundColor: WidgetStatePropertyAll(primaryColor),
       foregroundColor: WidgetStatePropertyAll(Colors.white),
     ),

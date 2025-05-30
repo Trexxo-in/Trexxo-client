@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_bloc.dart';
 import 'package:trexxo_mobility/blocs/auth/auth_event.dart';
 import 'package:trexxo_mobility/cubits/theme_cubit.dart';
+import 'package:trexxo_mobility/utils/constants.dart';
 import 'package:trexxo_mobility/widgets/custom_text_buttons.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -58,7 +59,12 @@ class ProfileScreen extends StatelessWidget {
               AuthButton(
                 onPressed: () {
                   context.read<AuthBloc>().add(LoggedOut());
-                  Navigator.popUntil(context, (route) => route.isFirst);
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    authRoute,
+                    (route) => false,
+                  );
                 },
                 label: 'Logout',
               ),

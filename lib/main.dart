@@ -10,10 +10,10 @@ import 'package:trexxo_mobility/blocs/booking/booking_bloc.dart';
 import 'package:trexxo_mobility/cubits/onboarding_cubit.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
+import 'package:trexxo_mobility/screens/onboarding/splash_screen.dart';
 import 'package:trexxo_mobility/screens/onboarding/welcome_screen.dart';
 import 'package:trexxo_mobility/services/firebase_service.dart';
 import 'package:trexxo_mobility/utils/theme.dart';
-import 'package:trexxo_mobility/widgets/custom_laoder.dart';
 
 import 'firebase_options.dart';
 import 'utils/constants.dart';
@@ -67,26 +67,53 @@ class MyApp extends StatelessWidget {
           themeMode: themeMode,
           debugShowCheckedModeBanner: false,
           routes: routes,
-          home: BlocBuilder<OnboardingCubit, bool>(
-            builder: (context, isFirstTime) {
-              if (isFirstTime) {
-                return WelcomeScreen();
-              } else {
-                return BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    if (state is Authenticated) {
-                      return const HomeScreen();
-                    } else if (state is Unauthenticated) {
-                      return const AuthScreen();
-                    }
-                    return const CustomLoader();
-                  },
-                );
-              }
-            },
-          ),
+          home: const RootInitializer(),
         );
       },
     );
+  }
+}
+
+class RootInitializer extends StatefulWidget {
+  const RootInitializer({super.key});
+
+  @override
+  State<RootInitializer> createState() => _RootInitializerState();
+}
+
+class _RootInitializerState extends State<RootInitializer> {
+  bool _showSplash = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          _showSplash = false;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showSplash) {
+      return const SplashScreen();
+    }
+
+    final isFirstTime = context.watch<OnboardingCubit>().state;
+    if (isFirstTime) {
+      return WelcomeScreen();
+    } else {
+      final authState = context.watch<AuthBloc>().state;
+      if (authState is Authenticated) {
+        return const HomeScreen();
+      } else if (authState is Unauthenticated) {
+        return const AuthScreen();
+      } else {
+        return const SplashScreen();
+      }
+    }
   }
 }

@@ -82,12 +82,7 @@ class AuthButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              label,
-              textAlign: TextAlign.center,
-
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text(label, textAlign: TextAlign.center),
 
             if (icon != null) ...[const SizedBox(width: 8), icon!],
           ],
