@@ -56,12 +56,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final user = await firebaseService.signIn(email, password);
+
       if (user != null && mounted) {
         if (user.emailVerified == false) {
           await firebaseService.sendEmailVerification();
           setState(() {
             loading = true;
           });
+          showSnackBar(context, 'Verify Email! Please check your inbox.');
           await firebaseService.waitForEmailVerification(user);
         }
 
@@ -84,9 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final firebaseService = RepositoryProvider.of<FirebaseService>(context);
 
     return loading
-        ? const CustomLoader(
-          waitingText: "Waiting for user to \nverify email id",
-        )
+        ? const CustomLoader(waitingText: "Loading User Data...")
         : Scaffold(
           appBar: AppBar(),
           body: SingleChildScrollView(
