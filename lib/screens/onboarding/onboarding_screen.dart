@@ -66,6 +66,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: PageView(
                 physics: const BouncingScrollPhysics(),
                 controller: _controller,
+                onPageChanged: (index) {
+                    setState(() => currentIndex = index);
+                  },
                 children: onboardingPages,
               ),
             ),
@@ -89,6 +92,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 }),
               ),
             ),
+            if (currentIndex != 2)
+            AuthButton(
+              onPressed: () {
+                       _controller.animateToPage(++currentIndex,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut);
+                      },
+              label: "Next",
+              icon:Icon(Icons.arrow_forward),
+            )
+                else
             AuthButton(
               onPressed: () {
                 context.read<OnboardingCubit>().completeOnboarding();
