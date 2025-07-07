@@ -22,7 +22,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   profileSetupRoute: (context) => const ProfileSetupScreen(),
 
   homeRoute: (context) => const HomeScreen(),
-  profileRoute: (context) => const ProfileScreen(),
+  profileRoute: (context) => ProfileScreen(),
 };
 
 // routes
