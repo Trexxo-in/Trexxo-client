@@ -105,3 +105,63 @@ class LocationInputField extends StatelessWidget {
     );
   }
 }
+
+class SearchField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final Icon icon;
+  final void Function(String) onChanged;
+  final VoidCallback onClear;
+
+  const SearchField({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.icon,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, value, _) {
+        return Material(
+          elevation: 4,
+          borderRadius: BorderRadius.circular(8),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: label,
+              prefixIcon: icon,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.all(16),
+              suffixIcon:
+                  value.text.isNotEmpty
+                      ? SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: onClear,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(
+                              minWidth: 32,
+                              minHeight: 32,
+                            ),
+                            splashRadius: 18,
+                          ),
+                        ),
+                      )
+                      : null,
+            ),
+            onChanged: onChanged,
+          ),
+        );
+      },
+    );
+  }
+}

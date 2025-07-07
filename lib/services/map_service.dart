@@ -53,30 +53,58 @@ class MapService {
   /// Get current location and reverse geocode to WayPoint
   static Future<WayPoint?> getPickupWaypointFromCurrentLocation() async {
     try {
-      final LatLng? currentLatLng = await getLocation();
-      if (currentLatLng == null) return null;
+      final currentLatLng = await getLocation();
+      if (currentLatLng == null) {
+        dev.log("❗ Could not retrieve current location.");
+        return null;
+      }
 
+      return await getLocationInfo(currentLatLng);
+    } catch (e, stackTrace) {
+      dev.log(
+        "❗ Exception in getPickupWaypointFromCurrentLocation: $e",
+        stackTrace: stackTrace,
+      );
+      return null;
+    }
+  }
+
+  static Future<WayPoint?> getLocationInfo(LatLng latLng) async {
+    try {
       final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json'
-        '?latlng=${currentLatLng.latitude},${currentLatLng.longitude}&key=$kGoogleApiKey',
+        '?latlng=${latLng.latitude},${latLng.longitude}&key=$kGoogleApiKey',
       );
 
       final response = await http.get(url);
-      final data = json.decode(response.body);
-
-      if (data['status'] == 'OK' && data['results'].isNotEmpty) {
-        final result = data['results'][0];
-        final address = result['formatted_address'];
-        final name = result['address_components'][0]['long_name'];
-
-        return WayPoint(name: name, address: address, location: currentLatLng);
-      } else {
-        dev.log("⚠️ Geocoding failed: ${data['status']}");
+      if (response.statusCode != 200) {
+        dev.log(
+          "❗ Failed to fetch geocoding data. Status code: ${response.statusCode}",
+        );
+        return null;
       }
-    } catch (e) {
-      dev.log("❗ Error during geocoding: $e");
+
+      final data = json.decode(response.body);
+      if (data['status'] != 'OK' || data['results'].isEmpty) {
+        dev.log("⚠️ Geocoding failed: ${data['status']}");
+        return null;
+      }
+
+      final result = data['results'][0];
+      final address = result['formatted_address'] ?? 'Unknown Address';
+
+      // Safely fetch a usable name from components
+      String name = 'Unnamed Location';
+      final components = result['address_components'] as List?;
+      if (components != null && components.isNotEmpty) {
+        name = components.first['long_name'] ?? name;
+      }
+
+      return WayPoint(name: name, address: address, location: latLng);
+    } catch (e, stackTrace) {
+      dev.log("❗ Exception in getLocationInfo: $e", stackTrace: stackTrace);
+      return null;
     }
-    return null;
   }
 
   /// Get predictions for place query

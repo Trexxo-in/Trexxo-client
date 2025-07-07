@@ -10,6 +10,7 @@ import 'package:trexxo_mobility/blocs/auth/auth_state.dart';
 import 'package:trexxo_mobility/blocs/booking/booking_bloc.dart';
 import 'package:trexxo_mobility/cubits/location_cubit.dart';
 import 'package:trexxo_mobility/cubits/onboarding_cubit.dart';
+import 'package:trexxo_mobility/cubits/ride_request_cubit.dart';
 import 'package:trexxo_mobility/screens/auth/auth_screen.dart';
 import 'package:trexxo_mobility/screens/home/home_screen.dart';
 import 'package:trexxo_mobility/screens/onboarding/splash_screen.dart';
@@ -44,6 +45,7 @@ void main() async {
           BlocProvider(create: (_) => OnboardingCubit()),
           BlocProvider(create: (_) => LocationCubit()),
           BlocProvider(create: (_) => BookingBloc()),
+          BlocProvider(create: (_) => RideRequestCubit()),
           BlocProvider(
             create:
                 (context) =>
