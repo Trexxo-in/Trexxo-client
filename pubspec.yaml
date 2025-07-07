@@ -15,7 +15,6 @@ dependencies:
   # ui elements
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
-  animated_text_kit: ^4.2.3
   icons_plus: ^5.0.0
 
   # cloud and state management
@@ -32,8 +31,8 @@ dependencies:
 
   # tools
   permission_handler: ^12.0.0+1
-  geolocator: ^14.0.0
   path_provider: ^2.1.5
+  geolocator: ^14.0.0
   geocoding: ^4.0.0
 
   flutter_dotenv: ^5.2.1
