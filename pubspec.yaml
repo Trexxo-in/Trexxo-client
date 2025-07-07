@@ -12,23 +12,31 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # ui elements
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
-  google_maps_flutter: ^2.12.2
-  permission_handler: ^12.0.0+1
+  animated_text_kit: ^4.2.3
+  icons_plus: ^5.0.0
+
+  # cloud and state management
   firebase_core: ^3.13.1
-  geolocator: ^14.0.0
-  flutter_google_places_sdk: ^0.4.2+1
+  firebase_auth: ^5.5.4
+  cloud_firestore: ^5.6.8
   flutter_bloc: ^9.1.1
   hydrated_bloc: ^10.0.0
-  path_provider: ^2.1.5
-  firebase_auth: ^5.5.4
-  icons_plus: ^5.0.0
-  cloud_firestore: ^5.6.8
   equatable: ^2.0.7
-  animated_text_kit: ^4.2.3
-  flutter_dotenv: ^5.2.1
+
+  # services
+  google_maps_flutter: ^2.12.2
+  flutter_google_places_sdk: ^0.4.2+1
+
+  # tools
+  permission_handler: ^12.0.0+1
+  geolocator: ^14.0.0
+  path_provider: ^2.1.5
   geocoding: ^4.0.0
+
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
