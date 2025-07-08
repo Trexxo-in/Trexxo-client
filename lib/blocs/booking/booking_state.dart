@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:trexxo_mobility/models/waypoint_model.dart';
 import 'booking_event.dart';
 
 abstract class BookingState extends Equatable {
@@ -11,8 +12,8 @@ abstract class BookingState extends Equatable {
 class BookingInitial extends BookingState {}
 
 class BookingInProgress extends BookingState {
-  final String? pickupLocation;
-  final String? dropoffLocation;
+  final WayPoint? pickupLocation;
+  final WayPoint? dropoffLocation;
   final ServiceType? serviceType;
 
   const BookingInProgress({
@@ -22,8 +23,8 @@ class BookingInProgress extends BookingState {
   });
 
   BookingInProgress copyWith({
-    String? pickupLocation,
-    String? dropoffLocation,
+    WayPoint? pickupLocation,
+    WayPoint? dropoffLocation,
     ServiceType? serviceType,
   }) {
     return BookingInProgress(

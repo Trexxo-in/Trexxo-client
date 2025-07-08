@@ -9,4 +9,9 @@ class WayPoint {
 
   factory WayPoint.empty() =>
       WayPoint(name: '', address: '', location: const LatLng(0.0, 0.0));
+
+  @override
+  String toString() {
+    return '$name, $address (${location.latitude}, ${location.longitude})';
+  }
 }

@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:trexxo_mobility/models/waypoint_model.dart';
 
 enum ServiceType { ride, ambulance, movers }
-
-enum RideType { ride, ambulance, movers, delivery }
 
 abstract class BookingEvent extends Equatable {
   const BookingEvent();
@@ -14,7 +13,7 @@ abstract class BookingEvent extends Equatable {
 class BookingStarted extends BookingEvent {}
 
 class PickupLocationSelected extends BookingEvent {
-  final String pickupLocation;
+  final WayPoint pickupLocation;
 
   const PickupLocationSelected(this.pickupLocation);
 
@@ -23,7 +22,7 @@ class PickupLocationSelected extends BookingEvent {
 }
 
 class DropoffLocationSelected extends BookingEvent {
-  final String dropoffLocation;
+  final WayPoint dropoffLocation;
 
   const DropoffLocationSelected(this.dropoffLocation);
 

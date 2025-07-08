@@ -21,10 +21,11 @@ class RideRequestCard extends StatelessWidget {
   });
 
   void _submitRideRequest(BuildContext context) {
-    final pickup = pickupController.text.trim();
-    final dropoff = dropoffController.text.trim();
+    final rideCubit = context.read<RideRequestCubit>();
+    final pickup = rideCubit.state.pickup;
+    final dropoff = rideCubit.state.dropoff;
 
-    if (pickup.isEmpty || dropoff.isEmpty) {
+    if (pickup == null || dropoff == null) {
       showSnackBar(context, "Please enter both pickup and drop-off locations");
       return;
     }
