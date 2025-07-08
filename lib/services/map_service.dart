@@ -17,7 +17,6 @@ class MapService {
     kGoogleApiKey,
   );
 
-  /// Default location: San Francisco
   static const LatLng defaultLatLng = LatLng(37.7749, -122.4194);
 
   static CameraPosition get initialCameraPosition =>
@@ -32,12 +31,13 @@ class MapService {
   static Future<void> animateCameraTo(LatLng target, {double zoom = 14}) async {
     try {
       final controller = await _controller.future;
-      final cameraUpdate = CameraUpdate.newCameraPosition(
-        CameraPosition(target: target, zoom: zoom),
+      await controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: target, zoom: zoom),
+        ),
       );
-      await controller.animateCamera(cameraUpdate);
     } catch (e) {
-      dev.log("Error animating camera: $e");
+      dev.log("❌ Error animating camera: $e");
     }
   }
 
@@ -46,11 +46,10 @@ class MapService {
     if (current != null) {
       await animateCameraTo(current, zoom: 15);
     } else {
-      dev.log("Failed to fetch current location.");
+      dev.log("❗ Failed to fetch current location.");
     }
   }
 
-  /// Get current location and reverse geocode to WayPoint
   static Future<WayPoint?> getPickupWaypointFromCurrentLocation() async {
     try {
       final currentLatLng = await getLocation();
@@ -58,7 +57,6 @@ class MapService {
         dev.log("❗ Could not retrieve current location.");
         return null;
       }
-
       return await getLocationInfo(currentLatLng);
     } catch (e, stackTrace) {
       dev.log(
@@ -78,22 +76,19 @@ class MapService {
 
       final response = await http.get(url);
       if (response.statusCode != 200) {
-        dev.log(
-          "❗ Failed to fetch geocoding data. Status code: ${response.statusCode}",
-        );
+        dev.log("❗ Geocoding API failed: ${response.statusCode}");
         return null;
       }
 
       final data = json.decode(response.body);
       if (data['status'] != 'OK' || data['results'].isEmpty) {
-        dev.log("⚠️ Geocoding failed: ${data['status']}");
+        dev.log("⚠️ Geocoding error: ${data['status']}");
         return null;
       }
 
       final result = data['results'][0];
       final address = result['formatted_address'] ?? 'Unknown Address';
 
-      // Safely fetch a usable name from components
       String name = 'Unnamed Location';
       final components = result['address_components'] as List?;
       if (components != null && components.isNotEmpty) {
@@ -107,7 +102,6 @@ class MapService {
     }
   }
 
-  /// Get predictions for place query
   static Future<List<AutocompletePrediction>> searchPlacePredictions(
     String query,
   ) async {
@@ -120,7 +114,6 @@ class MapService {
     return result.predictions;
   }
 
-  /// Fetch full place details using prediction
   static Future<WayPoint?> fetchPlaceDetailsFromPrediction(
     AutocompletePrediction prediction,
   ) async {
@@ -142,5 +135,71 @@ class MapService {
       dev.log("❗ Error fetching place details: $e");
     }
     return null;
+  }
+
+  /// ✅ Fetch navigated polyline using Google Directions API
+  static Future<List<LatLng>> getPolylineRoute(
+    LatLng origin,
+    LatLng destination,
+  ) async {
+    try {
+      final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/directions/json'
+        '?origin=${origin.latitude},${origin.longitude}'
+        '&destination=${destination.latitude},${destination.longitude}'
+        '&mode=driving'
+        '&key=$kGoogleApiKey',
+      );
+
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        dev.log("❌ Directions API failed: ${response.statusCode}");
+        return [];
+      }
+
+      final data = json.decode(response.body);
+      if (data['status'] != 'OK' || data['routes'].isEmpty) {
+        dev.log("⚠️ No routes found. Status: ${data['status']}");
+        return [];
+      }
+
+      final encoded = data['routes'][0]['overview_polyline']['points'];
+      return _decodePolyline(encoded);
+    } catch (e, stackTrace) {
+      dev.log("❗ Exception in getPolylineRoute: $e", stackTrace: stackTrace);
+      return [];
+    }
+  }
+
+  /// ✅ Decode encoded polyline
+  static List<LatLng> _decodePolyline(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int shift = 0, result = 0, b;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+      lng += dlng;
+
+      points.add(LatLng(lat / 1e5, lng / 1e5));
+    }
+
+    return points;
   }
 }
