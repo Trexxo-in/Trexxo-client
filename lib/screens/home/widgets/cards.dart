@@ -127,6 +127,11 @@ class RideRequestBottomSheet extends StatefulWidget {
 }
 
 class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
+  // loaders
+  bool _isFetchingInitialPickup = false;
+  bool _isSearchingPickupField = false;
+  bool _isSearchingDropoffField = false;
+
   final List<AutocompletePrediction> _predictions = [];
   Timer? _debounce;
   bool _isSearchingPickup = false;
@@ -138,6 +143,8 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
   }
 
   Future<void> _setInitialPickup() async {
+    setState(() => _isFetchingInitialPickup = true);
+
     final locationCubit = context.read<LocationCubit>();
     final fallback = locationCubit.state.lastKnownLocation;
 
@@ -150,21 +157,46 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
 
     widget.pickupController.text = waypoint.name;
     context.read<RideRequestCubit>().setPickup(waypoint);
+    setState(() => _isFetchingInitialPickup = false);
   }
 
   void _onSearchChanged(String query, bool isPickup) {
-    _isSearchingPickup = isPickup;
     _debounce?.cancel();
 
-    if (query.trim().length < 2) return;
+    if (query.trim().length < 2) {
+      setState(() {
+        _predictions.clear();
+        if (isPickup) {
+          _isSearchingPickupField = false;
+        } else {
+          _isSearchingDropoffField = false;
+        }
+      });
+      return;
+    }
 
     _debounce = Timer(const Duration(milliseconds: 300), () async {
+      setState(() {
+        if (isPickup) {
+          _isSearchingPickupField = true;
+        } else {
+          _isSearchingDropoffField = true;
+        }
+      });
+
       final results = await MapService.searchPlacePredictions(query);
       if (!mounted) return;
+
       setState(() {
         _predictions
           ..clear()
           ..addAll(results);
+
+        if (isPickup) {
+          _isSearchingPickupField = false;
+        } else {
+          _isSearchingDropoffField = false;
+        }
       });
     });
   }
@@ -246,8 +278,11 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                   widget.pickupController.clear();
                   setState(() => _predictions.clear());
                 },
+                isLoading: _isFetchingInitialPickup || _isSearchingPickupField,
               ),
+
               const SizedBox(height: 12),
+
               SearchField(
                 controller: widget.dropoffController,
                 label: 'Destination',
@@ -257,6 +292,7 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                   widget.dropoffController.clear();
                   setState(() => _predictions.clear());
                 },
+                isLoading: _isSearchingDropoffField,
               ),
 
               if (_predictions.isNotEmpty) ...[

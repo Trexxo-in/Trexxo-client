@@ -112,6 +112,7 @@ class SearchField extends StatelessWidget {
   final Icon icon;
   final void Function(String) onChanged;
   final VoidCallback onClear;
+  final bool isLoading;
 
   const SearchField({
     super.key,
@@ -120,6 +121,7 @@ class SearchField extends StatelessWidget {
     required this.icon,
     required this.onChanged,
     required this.onClear,
+    this.isLoading = false,
   });
 
   @override
@@ -138,7 +140,19 @@ class SearchField extends StatelessWidget {
               border: const OutlineInputBorder(),
               contentPadding: const EdgeInsets.all(16),
               suffixIcon:
-                  value.text.isNotEmpty
+                  isLoading
+                      ? SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0,
+                            vertical: 10,
+                          ),
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        ),
+                      )
+                      : value.text.isNotEmpty
                       ? SizedBox(
                         width: 32,
                         height: 32,
