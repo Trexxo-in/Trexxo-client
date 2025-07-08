@@ -132,6 +132,9 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
   bool _isSearchingPickupField = false;
   bool _isSearchingDropoffField = false;
 
+  final FocusNode _pickupFocusNode = FocusNode();
+  final FocusNode _dropoffFocusNode = FocusNode();
+
   final List<AutocompletePrediction> _predictions = [];
   Timer? _debounce;
   bool _isSearchingPickup = false;
@@ -139,7 +142,22 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
   @override
   void initState() {
     super.initState();
-    _setInitialPickup();
+    final rideState = context.read<RideRequestCubit>().state;
+    if (rideState.pickup == null) {
+      _setInitialPickup();
+    }
+
+    _pickupFocusNode.addListener(() {
+      if (_pickupFocusNode.hasFocus) {
+        setState(() => _isSearchingPickup = true);
+      }
+    });
+
+    _dropoffFocusNode.addListener(() {
+      if (_dropoffFocusNode.hasFocus) {
+        setState(() => _isSearchingPickup = false);
+      }
+    });
   }
 
   Future<void> _setInitialPickup() async {
@@ -212,34 +230,79 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
 
     controller.text = waypoint.name;
 
-    final cubit = context.read<RideRequestCubit>();
-    _isSearchingPickup ? cubit.setPickup(waypoint) : cubit.setDropoff(waypoint);
+    final rideCubit = context.read<RideRequestCubit>();
+    final locationCubit = context.read<LocationCubit>();
+
+    _isSearchingPickup
+        ? rideCubit.setPickup(waypoint)
+        : rideCubit.setDropoff(waypoint);
+
+    // ✅ Add selected location to history
+    locationCubit.addToHistory(waypoint);
 
     setState(() => _predictions.clear());
     FocusScope.of(context).unfocus();
   }
 
   Widget _buildPredictionList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: _predictions.length,
-      itemBuilder: (context, index) {
-        final p = _predictions[index];
-        return ListTile(
-          leading: const Icon(Icons.location_on),
-          title: Text(p.fullText),
-          subtitle: Text(p.secondaryText),
-          onTap: () => _selectPrediction(p),
-        );
-      },
-    );
-  }
+    final history = context.read<LocationCubit>().state.history.toList();
 
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (history.isNotEmpty) ...[
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              'Recent Locations',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children:
+                history.map((waypoint) {
+                  return ActionChip(
+                    label: Text(waypoint.name),
+                    onPressed: () {
+                      // Populate controller text manually
+                      final controller =
+                          _isSearchingPickup
+                              ? widget.pickupController
+                              : widget.dropoffController;
+
+                      controller.text = waypoint.name;
+
+                      final rideCubit = context.read<RideRequestCubit>();
+                      _isSearchingPickup
+                          ? rideCubit.setPickup(waypoint)
+                          : rideCubit.setDropoff(waypoint);
+
+                      FocusScope.of(context).unfocus();
+                      setState(() => _predictions.clear());
+                    },
+                  );
+                }).toList(),
+          ),
+          const Divider(height: 24),
+        ],
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _predictions.length,
+          itemBuilder: (context, index) {
+            final p = _predictions[index];
+            return ListTile(
+              leading: const Icon(Icons.location_on),
+              title: Text(p.fullText),
+              subtitle: Text(p.secondaryText),
+              onTap: () => _selectPrediction(p),
+            );
+          },
+        ),
+      ],
+    );
   }
 
   @override
@@ -271,11 +334,13 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
               const SizedBox(height: 12),
               SearchField(
                 controller: widget.pickupController,
+                focusNode: _pickupFocusNode,
                 label: 'Pickup Location',
                 icon: const Icon(Icons.my_location),
                 onChanged: (value) => _onSearchChanged(value, true),
                 onClear: () {
                   widget.pickupController.clear();
+                  context.read<RideRequestCubit>().clearPickup();
                   setState(() => _predictions.clear());
                 },
                 isLoading: _isFetchingInitialPickup || _isSearchingPickupField,
@@ -285,24 +350,34 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
 
               SearchField(
                 controller: widget.dropoffController,
+                focusNode: _dropoffFocusNode,
                 label: 'Destination',
                 icon: const Icon(Icons.location_on),
                 onChanged: (value) => _onSearchChanged(value, false),
                 onClear: () {
                   widget.dropoffController.clear();
+                  context.read<RideRequestCubit>().clearDropoff();
                   setState(() => _predictions.clear());
                 },
                 isLoading: _isSearchingDropoffField,
               ),
 
-              if (_predictions.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                _buildPredictionList(),
-              ],
+              // if (_predictions.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _buildPredictionList(),
+              // ],
             ],
           ),
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _pickupFocusNode.dispose();
+    _dropoffFocusNode.dispose();
+    super.dispose();
   }
 }

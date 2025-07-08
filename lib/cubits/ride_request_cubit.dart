@@ -13,8 +13,16 @@ class RideRequestCubit extends Cubit<RideRequestState> {
     emit(state.copyWith(dropoff: dropoff));
   }
 
+  void clearPickup() {
+    emit(state.copyWith(clearPickup: true));
+  }
+
+  void clearDropoff() {
+    emit(state.copyWith(clearDropoff: true));
+  }
+
   void clearLocations() {
-    emit(const RideRequestState());
+    emit(const RideRequestState()); // clears both
   }
 }
 
@@ -25,10 +33,15 @@ class RideRequestState {
 
   const RideRequestState({this.pickup, this.dropoff});
 
-  RideRequestState copyWith({WayPoint? pickup, WayPoint? dropoff}) {
+  RideRequestState copyWith({
+    WayPoint? pickup,
+    bool clearPickup = false,
+    WayPoint? dropoff,
+    bool clearDropoff = false,
+  }) {
     return RideRequestState(
-      pickup: pickup ?? this.pickup,
-      dropoff: dropoff ?? this.dropoff,
+      pickup: clearPickup ? null : pickup ?? this.pickup,
+      dropoff: clearDropoff ? null : dropoff ?? this.dropoff,
     );
   }
 }

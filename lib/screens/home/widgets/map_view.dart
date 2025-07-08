@@ -38,6 +38,15 @@ class _MapViewState extends State<MapView> {
     WayPoint? pickup,
     WayPoint? dropoff,
   ) async {
+    // If both are null, clear everything
+    if (pickup == null && dropoff == null) {
+      setState(() {
+        _markers.clear();
+        _polylines.clear();
+      });
+      return;
+    }
+
     final updatedMarkers = <Marker>{};
 
     if (pickup != null) {

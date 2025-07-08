@@ -108,6 +108,7 @@ class LocationInputField extends StatelessWidget {
 
 class SearchField extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final String label;
   final Icon icon;
   final void Function(String) onChanged;
@@ -117,6 +118,7 @@ class SearchField extends StatelessWidget {
   const SearchField({
     super.key,
     required this.controller,
+    this.focusNode,
     required this.label,
     required this.icon,
     required this.onChanged,
@@ -134,6 +136,7 @@ class SearchField extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: TextField(
             controller: controller,
+            focusNode: focusNode,
             decoration: InputDecoration(
               labelText: label,
               prefixIcon: icon,
