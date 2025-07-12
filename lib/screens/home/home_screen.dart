@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:trexxo_mobility/screens/home/widgets/cards.dart';
+import 'package:trexxo_mobility/screens/home/cards.dart';
 import 'package:trexxo_mobility/screens/home/widgets/icon_buttons.dart';
-import 'package:trexxo_mobility/screens/home/widgets/map_view.dart';
+import 'package:trexxo_mobility/screens/home/map_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
