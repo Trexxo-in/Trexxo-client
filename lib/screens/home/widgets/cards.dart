@@ -2,44 +2,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
-import 'package:trexxo_mobility/blocs/booking/booking_bloc.dart';
-import 'package:trexxo_mobility/blocs/booking/booking_event.dart';
 import 'package:trexxo_mobility/cubits/location_cubit.dart';
 import 'package:trexxo_mobility/cubits/ride_request_cubit.dart';
 import 'package:trexxo_mobility/services/map_service.dart';
-import 'package:trexxo_mobility/widgets/custom_snackbar.dart';
 import 'package:trexxo_mobility/widgets/custom_text_fields.dart';
 
-class RideRequestCard extends StatelessWidget {
-  final TextEditingController pickupController;
-  final TextEditingController dropoffController;
+class RideRequestCard extends StatefulWidget {
+  const RideRequestCard({super.key});
 
-  const RideRequestCard({
-    super.key,
-    required this.pickupController,
-    required this.dropoffController,
-  });
+  @override
+  State<RideRequestCard> createState() => _RideRequestCardState();
+}
 
-  void _submitRideRequest(BuildContext context) {
-    final rideCubit = context.read<RideRequestCubit>();
-    final pickup = rideCubit.state.pickup;
-    final dropoff = rideCubit.state.dropoff;
+class _RideRequestCardState extends State<RideRequestCard> {
+  final TextEditingController _pickupController = TextEditingController();
+  final TextEditingController _dropoffController = TextEditingController();
 
-    if (pickup == null || dropoff == null) {
-      showSnackBar(context, "Please enter both pickup and drop-off locations");
-      return;
-    }
-
-    final bookingBloc = context.read<BookingBloc>();
-    bookingBloc
-      ..add(BookingStarted())
-      ..add(PickupLocationSelected(pickup))
-      ..add(DropoffLocationSelected(dropoff))
-      ..add(ServiceTypeSelected(ServiceType.ride))
-      ..add(BookingSubmitted());
-
-    showSnackBar(context, "Booking request submitted!");
-    Navigator.of(context).pop();
+  @override
+  void dispose() {
+    _pickupController.dispose();
+    _dropoffController.dispose();
+    super.dispose();
   }
 
   void _showExpandedModal(BuildContext context) {
@@ -49,8 +32,8 @@ class RideRequestCard extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder:
           (_) => RideRequestBottomSheet(
-            pickupController: pickupController,
-            dropoffController: dropoffController,
+            pickupController: _pickupController,
+            dropoffController: _dropoffController,
           ),
     );
   }
@@ -85,7 +68,7 @@ class RideRequestCard extends StatelessWidget {
               onTap: () => _showExpandedModal(context),
               child: AbsorbPointer(
                 child: LocationInputField(
-                  controller: dropoffController,
+                  controller: _dropoffController,
                   label: 'Where to?',
                   icon: Icons.location_on,
                 ),
@@ -93,7 +76,8 @@ class RideRequestCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () => _submitRideRequest(context),
+              onPressed:
+                  () => _showExpandedModal(context), // or nothing if removed
               icon: const Icon(Icons.check),
               label: const Text('Confirm Destination'),
               style: ElevatedButton.styleFrom(

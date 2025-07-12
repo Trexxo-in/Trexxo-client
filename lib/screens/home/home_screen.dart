@@ -12,13 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _pickupController = TextEditingController();
-  final TextEditingController _dropoffController = TextEditingController();
-
   @override
   void dispose() {
-    _pickupController.dispose();
-    _dropoffController.dispose();
     super.dispose();
   }
 
@@ -37,10 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   children: [
                     // MyLocationButton(),
-                    RideRequestCard(
-                      pickupController: _pickupController,
-                      dropoffController: _dropoffController,
-                    ),
+                    RideRequestCard(),
                   ],
                 ),
               ],
