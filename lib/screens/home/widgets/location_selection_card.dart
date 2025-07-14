@@ -1,7 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
+import 'package:trexxo_mobility/blocs/booking/booking_bloc.dart';
+import 'package:trexxo_mobility/blocs/booking/booking_event.dart';
 import 'package:trexxo_mobility/cubits/location_cubit.dart';
 import 'package:trexxo_mobility/cubits/ride_request_cubit.dart';
 import 'package:trexxo_mobility/services/map_service.dart';
@@ -35,10 +38,13 @@ class _LocationSelectionBottomSheetState
   final List<AutocompletePrediction> _predictions = [];
   Timer? _debounce;
   bool _isSearchingPickup = false;
-
   @override
   void initState() {
     super.initState();
+
+    // Start booking session
+    context.read<BookingBloc>().add(BookingStarted());
+
     final rideState = context.read<RideRequestCubit>().state;
     if (rideState.pickup == null) {
       _setInitialPickup();
@@ -72,6 +78,7 @@ class _LocationSelectionBottomSheetState
 
     widget.pickupController.text = waypoint.name;
     context.read<RideRequestCubit>().setPickup(waypoint);
+    context.read<BookingBloc>().add(PickupLocationSelected(waypoint));
     setState(() => _isFetchingInitialPickup = false);
   }
 
@@ -124,17 +131,20 @@ class _LocationSelectionBottomSheetState
 
     final controller =
         _isSearchingPickup ? widget.pickupController : widget.dropoffController;
-
     controller.text = waypoint.name;
 
     final rideCubit = context.read<RideRequestCubit>();
     final locationCubit = context.read<LocationCubit>();
+    final bookingBloc = context.read<BookingBloc>();
 
-    _isSearchingPickup
-        ? rideCubit.setPickup(waypoint)
-        : rideCubit.setDropoff(waypoint);
+    if (_isSearchingPickup) {
+      rideCubit.setPickup(waypoint);
+      bookingBloc.add(PickupLocationSelected(waypoint));
+    } else {
+      rideCubit.setDropoff(waypoint);
+      bookingBloc.add(DropoffLocationSelected(waypoint));
+    }
 
-    // ✅ Add selected location to history
     locationCubit.addToHistory(waypoint);
 
     setState(() => _predictions.clear());
@@ -172,12 +182,22 @@ class _LocationSelectionBottomSheetState
                       controller.text = waypoint.name;
 
                       final rideCubit = context.read<RideRequestCubit>();
+                      final bookingBloc = context.read<BookingBloc>();
                       _isSearchingPickup
-                          ? rideCubit.setPickup(waypoint)
-                          : rideCubit.setDropoff(waypoint);
+                          ? {
+                            rideCubit.setPickup(waypoint),
+                            bookingBloc.add(PickupLocationSelected(waypoint)),
+                          }
+                          : {
+                            rideCubit.setDropoff(waypoint),
+                            bookingBloc.add(DropoffLocationSelected(waypoint)),
+                          };
 
                       FocusScope.of(context).unfocus();
                       setState(() => _predictions.clear());
+                      if (!_isSearchingPickup) {
+                        Navigator.of(context).pop();
+                      }
                     },
                   );
                 }).toList(),

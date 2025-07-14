@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:trexxo_mobility/screens/home/cards.dart';
+import 'package:trexxo_mobility/screens/home/booking.dart';
 import 'package:trexxo_mobility/screens/home/widgets/icon_buttons.dart';
 import 'package:trexxo_mobility/screens/home/map_view.dart';
 
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   children: [
                     // MyLocationButton(),
-                    RideRequestCard(),
+                    BookingStateHandler(),
                   ],
                 ),
               ],

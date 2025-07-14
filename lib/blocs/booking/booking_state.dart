@@ -4,47 +4,77 @@ import 'booking_event.dart';
 
 abstract class BookingState extends Equatable {
   const BookingState();
-
   @override
   List<Object?> get props => [];
 }
 
+/// Booking hasn't started yet
 class BookingInitial extends BookingState {}
 
-class BookingInProgress extends BookingState {
-  final WayPoint? pickupLocation;
-  final WayPoint? dropoffLocation;
-  final ServiceType? serviceType;
+/// User selected pickup and/or dropoff (but not serviceType yet)
+class LocationSelectedState extends BookingState {
+  final WayPoint? pickup;
+  final WayPoint? dropoff;
 
-  const BookingInProgress({
-    this.pickupLocation,
-    this.dropoffLocation,
-    this.serviceType,
-  });
+  const LocationSelectedState({this.pickup, this.dropoff});
 
-  BookingInProgress copyWith({
-    WayPoint? pickupLocation,
-    WayPoint? dropoffLocation,
-    ServiceType? serviceType,
-  }) {
-    return BookingInProgress(
-      pickupLocation: pickupLocation ?? this.pickupLocation,
-      dropoffLocation: dropoffLocation ?? this.dropoffLocation,
-      serviceType: serviceType ?? this.serviceType,
+  LocationSelectedState copyWith({WayPoint? pickup, WayPoint? dropoff}) {
+    return LocationSelectedState(
+      pickup: pickup ?? this.pickup,
+      dropoff: dropoff ?? this.dropoff,
     );
   }
 
   @override
-  List<Object?> get props => [pickupLocation, dropoffLocation, serviceType];
+  List<Object?> get props => [pickup, dropoff];
 }
 
-class BookingSuccess extends BookingState {}
+/// Service type selected, but not submitted yet
+class ServiceTypeSelectedState extends BookingState {
+  final WayPoint? pickup;
+  final WayPoint? dropoff;
+  final ServiceType serviceType;
 
-class BookingFailure extends BookingState {
+  const ServiceTypeSelectedState({
+    required this.pickup,
+    required this.dropoff,
+    required this.serviceType,
+  });
+
+  @override
+  List<Object?> get props => [pickup, dropoff, serviceType];
+}
+
+/// Full booking is submitted
+class BookingDetailsSubmittedState extends BookingState {}
+
+/// Driver search
+class DriverMatchingInProgress extends BookingState {}
+
+class DriverAssignedState extends BookingState {}
+
+class DriverArrivedState extends BookingState {}
+
+class RideInProgressState extends BookingState {}
+
+class RideCompletedState extends BookingState {}
+
+class AwaitingPaymentState extends BookingState {}
+
+class PaymentSuccessState extends BookingState {}
+
+class PaymentFailureState extends BookingState {
+  final String reason;
+  const PaymentFailureState(this.reason);
+  @override
+  List<Object?> get props => [reason];
+}
+
+class BookingCancelledState extends BookingState {}
+
+class BookingErrorState extends BookingState {
   final String error;
-
-  const BookingFailure(this.error);
-
+  const BookingErrorState(this.error);
   @override
   List<Object?> get props => [error];
 }

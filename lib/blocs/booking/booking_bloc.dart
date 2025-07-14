@@ -1,29 +1,41 @@
 import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'booking_event.dart';
 import 'booking_state.dart';
+import 'package:trexxo_mobility/models/waypoint_model.dart';
 
 class BookingBloc extends Bloc<BookingEvent, BookingState> {
   BookingBloc() : super(BookingInitial()) {
     on<BookingStarted>(_onStarted);
     on<PickupLocationSelected>(_onPickupSelected);
     on<DropoffLocationSelected>(_onDropoffSelected);
-    on<ServiceTypeSelected>(_onServiceTypeSelected);
-    on<BookingSubmitted>(_onSubmitted);
+    on<BookingServiceTypeSelected>(_onServiceTypeSelected);
+    on<BookingDetailsSubmitted>(_onSubmitted);
   }
 
+  WayPoint? _pickup;
+  WayPoint? _dropoff;
+
   void _onStarted(BookingStarted event, Emitter<BookingState> emit) {
-    emit(BookingInProgress());
+    log('Booking session started', name: 'BookingBloc');
+    _pickup = null;
+    _dropoff = null;
+    emit(BookingInitial());
   }
 
   void _onPickupSelected(
     PickupLocationSelected event,
     Emitter<BookingState> emit,
   ) {
-    if (state is BookingInProgress) {
-      final currentState = state as BookingInProgress;
-      emit(currentState.copyWith(pickupLocation: event.pickupLocation));
+    _pickup = event.pickupLocation;
+    log('Pickup selected: $_pickup', name: 'BookingBloc');
+
+    if (_pickup != null && _dropoff != null) {
+      emit(LocationSelectedState(pickup: _pickup!, dropoff: _dropoff!));
+      log(
+        'Both pickup and dropoff selected. Emitting LocationSelectedState.',
+        name: 'BookingBloc',
+      );
     }
   }
 
@@ -31,40 +43,58 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     DropoffLocationSelected event,
     Emitter<BookingState> emit,
   ) {
-    if (state is BookingInProgress) {
-      final currentState = state as BookingInProgress;
-      emit(currentState.copyWith(dropoffLocation: event.dropoffLocation));
+    _dropoff = event.dropoffLocation;
+    log('Dropoff selected: $_dropoff', name: 'BookingBloc');
+
+    if (_pickup != null && _dropoff != null) {
+      emit(LocationSelectedState(pickup: _pickup!, dropoff: _dropoff!));
+      log(
+        'Both pickup and dropoff selected. Emitting LocationSelectedState.',
+        name: 'BookingBloc',
+      );
     }
   }
 
   void _onServiceTypeSelected(
-    ServiceTypeSelected event,
+    BookingServiceTypeSelected event,
     Emitter<BookingState> emit,
   ) {
-    if (state is BookingInProgress) {
-      final currentState = state as BookingInProgress;
-      emit(currentState.copyWith(serviceType: event.serviceType));
+    log('Service type selected: ${event.serviceType}', name: 'BookingBloc');
+
+    if (state is LocationSelectedState) {
+      final locationState = state as LocationSelectedState;
+
+      emit(
+        ServiceTypeSelectedState(
+          pickup: locationState.pickup,
+          dropoff: locationState.dropoff,
+          serviceType: event.serviceType,
+        ),
+      );
+      log('Transitioned to ServiceTypeSelectedState', name: 'BookingBloc');
+    } else {
+      emit(BookingErrorState("Please select both pickup and dropoff first."));
+      log(
+        'Error: Tried selecting service type before setting locations',
+        name: 'BookingBloc',
+      );
     }
   }
 
-  void _onSubmitted(BookingSubmitted event, Emitter<BookingState> emit) {
-    if (state is BookingInProgress) {
-      final current = state as BookingInProgress;
-      log("Submitting booking with state: $current");
-      if (current.pickupLocation != null &&
-          current.dropoffLocation != null &&
-          current.serviceType != null) {
-        log(
-          "Booking submitted with: "
-          "Pickup: ${current.pickupLocation}, "
-          "Dropoff: ${current.dropoffLocation}, "
-          "Service: ${current.serviceType}",
-          name: "Booking",
-        );
-        emit(BookingSuccess());
-      } else {
-        emit(BookingFailure("Please complete all fields."));
-      }
+  void _onSubmitted(BookingDetailsSubmitted event, Emitter<BookingState> emit) {
+    if (state is ServiceTypeSelectedState) {
+      final s = state as ServiceTypeSelectedState;
+      log(
+        "Booking submitted:\nPickup: ${s.pickup}\nDropoff: ${s.dropoff}\nServiceType: ${s.serviceType}",
+        name: 'BookingBloc',
+      );
+      emit(BookingDetailsSubmittedState());
+    } else {
+      emit(BookingErrorState("Missing data. Cannot submit booking."));
+      log(
+        'Error: Tried to submit booking in invalid state: $state',
+        name: 'BookingBloc',
+      );
     }
   }
 }
